@@ -1,16 +1,24 @@
 const axios = require('axios');
+const jwt = require('jsonwebtoken');
 
 const GITHUB_USERNAME = 'rlaplaza';
 const GITHUB_REPONAME = 'kacemo_web';
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN; // Changed from REACT_APP_GITHUB_TOKEN
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN; // Application's PAT for GitHub API calls
+const JWT_SECRET = process.env.JWT_SECRET;
 const VENUES_FILE_PATH = 'frontend/src/data/venues.json';
+
+// Our hardcoded list of authorized emails for the prototype (must match those in api/auth/google.js)
+const AUTHORIZED_EMAILS = [
+  'laplazasolanas@gmail.com', // <<-- IMPORTANT: Replace with actual authorized Google email addresses
+  // Add more authorized emails here
+];
 
 module.exports = async (req, res) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,OPTIONS,POST'); // Added POST for completeness
-    res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,OPTIONS,POST');
+    res.setHeader('Access-Control-Allow-Headers', 'Authorization, X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
     res.status(204).end();
     return;
   }
@@ -22,20 +30,40 @@ module.exports = async (req, res) => {
       const response = await axios.get(apiUrl, {
         headers: {
           Authorization: `token ${GITHUB_TOKEN}`,
-          Accept: 'application/vnd.github.v3+json'
+          Accept: 'application/vnd.github.com.v3.raw' // Request raw content for JSON file
         }
       });
-      const content = Buffer.from(response.data.content, 'base64').toString('utf8');
-      res.status(200).json(JSON.parse(content));
-
+      // GitHub API for contents returns base64 encoded by default unless Accept header specifies raw
+      // If we request raw, it will be already decoded.
+      // const content = Buffer.from(response.data.content, 'base64').toString('utf8');
+      res.status(200).json(response.data); // If raw content is requested, response.data is directly the JSON
     } else if (req.method === 'PUT') {
+      // For PUT requests (updating venues), authentication and authorization are required.
+      const authHeader = req.headers.authorization;
+      if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ message: 'Authentication required: Bearer token missing.' });
+      }
+      const token = authHeader.split(' ')[1];
+
+      let decoded;
+      try {
+        decoded = jwt.verify(token, JWT_SECRET);
+      } catch (err) {
+        return res.status(401).json({ message: 'Invalid or expired token.' });
+      }
+
+      // Check if the authenticated user is authorized to create/update venues
+      if (!AUTHORIZED_EMAILS.includes(decoded.email)) {
+        return res.status(403).json({ message: `Access Denied: Your email (${decoded.email}) is not authorized to update venues.` });
+      }
+
       const { name, address } = req.body;
 
       // 1. Get the current file content and SHA
       const getFileResponse = await axios.get(apiUrl, {
         headers: {
           Authorization: `token ${GITHUB_TOKEN}`,
-          Accept: 'application/vnd.github.v3+json'
+          Accept: 'application/vnd.github.v3+json' // Request full metadata including SHA
         }
       });
 
@@ -66,7 +94,6 @@ module.exports = async (req, res) => {
       res.status(200).json({ message: 'Venue added successfully!' });
 
     } else {
-      // res.setHeader('Allow', ['GET', 'PUT']); // Allow header is handled by OPTIONS
       res.status(405).end(`Method ${req.method} Not Allowed`);
     }
   } catch (error) {
