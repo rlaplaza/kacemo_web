@@ -1,94 +1,49 @@
 const { OAuth2Client } = require('google-auth-library');
-const jwt = require('jsonwebtoken');
-const { AUTHORIZED_EMAILS } = require('../config/auth'); // Import from unified config
 
 // Environment Variables (from Vercel)
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
-const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
-const JWT_SECRET = process.env.JWT_SECRET;
-// Use OAUTH_REDIRECT_URI for the FULL stable redirect URI
-const OAUTH_REDIRECT_URI = process.env.OAUTH_REDIRECT_URI || 'http://localhost:3000/api/auth/google/callback'; 
+// OAUTH_FRONTEND_CALLBACK_URI should point to our frontend route /auth/callback
+// e.g., https://kacemo-web.vercel.app/auth/callback
+const OAUTH_FRONTEND_CALLBACK_URI = process.env.OAUTH_FRONTEND_CALLBACK_URI || 'http://localhost:3000/auth/callback';
 
-// Initialize Google OAuth2 Client
+// Initialize Google OAuth2 Client to generate the auth URL
 const oAuth2Client = new OAuth2Client(
   GOOGLE_CLIENT_ID,
-  GOOGLE_CLIENT_SECRET,
-  OAUTH_REDIRECT_URI // Use the full redirect URI directly
+  null, // No client secret needed here as we are only generating auth URL
+  OAUTH_FRONTEND_CALLBACK_URI // This is where Google will redirect to AFTER user authentication
 );
 
 module.exports = async (req, res) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,POST');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
     res.status(204).end();
     return;
   }
 
-  const { code, state } = req.query; // 'code' for callback, 'state' for redirect URL
-
-  if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !JWT_SECRET || !OAUTH_REDIRECT_URI) {
-    console.error('Missing environment variables for Google OAuth or JWT.');
-    return res.status(500).json({ message: 'Server configuration error: Missing environment variables for Google OAuth or JWT.' });
+  // This endpoint is only for initiating the OAuth flow (GET request from frontend)
+  if (req.method !== 'GET') {
+    return res.status(405).json({ message: 'Method Not Allowed' });
   }
-  
-  // Log the generated redirect URI for debugging
-  console.log('OAUTH_REDIRECT_URI configured:', OAUTH_REDIRECT_URI);
 
-
-  // Handle Google OAuth Callback
-  if (code) {
-    try {
-      // Log the received code
-      console.log('Received OAuth code:', code);
-
-      const { tokens } = await oAuth2Client.getToken(code);
-      oAuth2Client.setCredentials(tokens);
-      const ticket = await oAuth2Client.verifyIdToken({
-        idToken: tokens.id_token,
-        audience: GOOGLE_CLIENT_ID,
-      });
-      const payload = ticket.getPayload();
-      const userId = payload['sub'];
-      const userEmail = payload['email'];
-      const userName = payload['name'];
-      
-      console.log('Authenticated User Email:', userEmail);
-
-      // Check if user is authorized
-      if (!AUTHORIZED_EMAILS.includes(userEmail)) {
-        console.warn('Unauthorized user attempt:', userEmail);
-        return res.status(403).send(`<h1>Acceso Denegado</h1><p>Tu correo electrónico (${userEmail}) no está autorizado para acceder a esta aplicación.</p><p><a href="/">Ir a Inicio</a></p>`);
-      }
-
-      // Generate a custom JWT for our application
-      const appToken = jwt.sign(
-        { userId: userId, email: userEmail, name: userName },
-        JWT_SECRET,
-        { expiresIn: '1h' } // Token expires in 1 hour
-      );
-      
-      console.log('Generated App JWT for user:', userEmail);
-
-      // Redirect back to frontend, passing the appToken (e.g., in query param or fragment)
-      const redirectFrontendUrl = state || '/'; // Use 'state' for frontend redirect
-      console.log('Redirecting to frontend with token:', `${redirectFrontendUrl}#token=${appToken.substring(0, 10)}...`); // Log partial token
-      return res.redirect(`${redirectFrontendUrl}#token=${appToken}`);
-
-    } catch (error) {
-      console.error('Error during Google OAuth callback:', error);
-      return res.status(500).send('Authentication failed.');
-    }
-  } else {
-    // Initiate Google OAuth Flow (frontend will call this with a redirect URL in 'state')
-    const authUrl = oAuth2Client.generateAuthUrl({
-      access_type: 'offline',
-      scope: ['https://www.googleapis.com/auth/userinfo.email', 'https://www.googleapis.com/auth/userinfo.profile'],
-      prompt: 'consent', // Ensures refresh token is re-issued
-      state: state || '/' // Pass original frontend URL to redirect back to
-    });
-    console.log('Initiating Google OAuth flow. Auth URL:', authUrl);
-    return res.redirect(authUrl);
+  if (!GOOGLE_CLIENT_ID || !OAUTH_FRONTEND_CALLBACK_URI) {
+    console.error('Missing environment variables for Google OAuth.');
+    return res.status(500).json({ message: 'Server configuration error: Missing Google Client ID or Frontend Callback URI.' });
   }
+
+  // The 'state' parameter will carry the frontend URL where the app should redirect after successful login
+  const { state } = req.query;
+
+  // Initiate Google OAuth Flow
+  const authUrl = oAuth2Client.generateAuthUrl({
+    access_type: 'offline',
+    scope: ['https://www.googleapis.com/auth/userinfo.email', 'https://www.googleapis.com/auth/userinfo.profile'],
+    prompt: 'consent', // Ensures refresh token is re-issued
+    state: state || '/' // Pass original frontend URL to redirect back to
+  });
+
+  console.log('Initiating Google OAuth flow. Auth URL:', authUrl);
+  return res.redirect(authUrl);
 };
