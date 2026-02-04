@@ -1,6 +1,6 @@
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
-const { AUTHORIZED_EMAILS } = require('./auth/auth'); // Corrected import path
+const { AUTHORIZED_EMAILS } = require('./auth/auth'); // Corrected import path (now in api/auth/auth.js)
 
 const GITHUB_USERNAME = 'rlaplaza';
 const GITHUB_REPONAME = 'kacemo_web';
