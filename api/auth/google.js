@@ -33,12 +33,21 @@ module.exports = async (req, res) => {
   const { code, state } = req.query; // 'code' for callback, 'state' for redirect URL
 
   if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !JWT_SECRET) {
+    console.error('Missing environment variables for Google OAuth or JWT.');
     return res.status(500).json({ message: 'Server configuration error: Missing environment variables for Google OAuth or JWT.' });
   }
+  
+  // Log the generated redirect URI for debugging
+  console.log('VERCEL_URL:', VERCEL_URL);
+  console.log('Generated Redirect URI:', `${VERCEL_URL}/api/auth/google/callback`);
+
 
   // Handle Google OAuth Callback
   if (code) {
     try {
+      // Log the received code
+      console.log('Received OAuth code:', code);
+
       const { tokens } = await oAuth2Client.getToken(code);
       oAuth2Client.setCredentials(tokens);
       const ticket = await oAuth2Client.verifyIdToken({
@@ -49,9 +58,12 @@ module.exports = async (req, res) => {
       const userId = payload['sub'];
       const userEmail = payload['email'];
       const userName = payload['name'];
+      
+      console.log('Authenticated User Email:', userEmail);
 
       // Check if user is authorized
       if (!AUTHORIZED_EMAILS.includes(userEmail)) {
+        console.warn('Unauthorized user attempt:', userEmail);
         return res.status(403).send(`<h1>Access Denied</h1><p>Your email (${userEmail}) is not authorized to access this application.</p><p><a href="/">Go to Home</a></p>`);
       }
 
@@ -61,11 +73,12 @@ module.exports = async (req, res) => {
         JWT_SECRET,
         { expiresIn: '1h' } // Token expires in 1 hour
       );
+      
+      console.log('Generated App JWT for user:', userEmail);
 
       // Redirect back to frontend, passing the appToken (e.g., in query param or fragment)
-      // For security, usually, this would involve setting a cookie or returning HTML with a script
-      // For simplicity in this prototype, we'll redirect with token in fragment for React to pick up
       const redirectFrontendUrl = state || '/'; // Use 'state' for frontend redirect
+      console.log('Redirecting to frontend with token:', `${redirectFrontendUrl}#token=${appToken.substring(0, 10)}...`); // Log partial token
       return res.redirect(`${redirectFrontendUrl}#token=${appToken}`);
 
     } catch (error) {
@@ -80,6 +93,7 @@ module.exports = async (req, res) => {
       prompt: 'consent', // Ensures refresh token is re-issued
       state: state || '/' // Pass original frontend URL to redirect back to
     });
+    console.log('Initiating Google OAuth flow. Auth URL:', authUrl);
     return res.redirect(authUrl);
   }
 };
