@@ -1,0 +1,41 @@
+name: Weekly Events Newsletter
+
+on:
+  schedule:
+    # Runs every Monday at 9 AM UTC
+    - cron: '0 9 * * 1'
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  build_and_send:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Generate Newsletter Content
+      id: generate_content
+      run: |
+        # Placeholder for script to fetch issues and generate content
+        # This will be replaced with a script that uses the GitHub API
+        echo "## Upcoming Events in Seville" > newsletter.md
+        echo "" >> newsletter.md
+        echo "* **Event 1:** Paella Festival - 2026-02-10 at Plaza de España" >> newsletter.md
+        echo "* **Event 2:** Flamenco Night - 2026-02-12 at Triana" >> newsletter.md
+        NEWSLETTER_CONTENT=$(cat newsletter.md)
+        echo "::set-output name=content::$NEWSLETTER_CONTENT"
+
+    - name: Send Newsletter
+      run: |
+        # Placeholder for sending email
+        # In the future, this will use a service like SendGrid
+        echo "Sending newsletter..."
+        echo "${{ steps.generate_content.outputs.content }}"
+        echo "Newsletter sent!"
+      env:
+        SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
