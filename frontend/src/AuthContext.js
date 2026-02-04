@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
         logout();
       }
     }
-  }, []); // Empty dependency array means this runs once on mount
+  }, [logout]); // Add logout to the dependency array
 
   const login = (jwtToken) => {
     sessionStorage.setItem('app_jwt_token', jwtToken);
