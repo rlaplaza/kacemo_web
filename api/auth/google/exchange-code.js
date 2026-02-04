@@ -1,6 +1,6 @@
 const { OAuth2Client } = require('google-auth-library');
 const jwt = require('jsonwebtoken');
-const { AUTHORIZED_EMAILS } = require('../auth'); // Import from unified config (now in api/auth folder)
+const { AUTHORIZED_EMAILS } = require('./auth'); // Import from unified config (now in api/auth folder)
 
 // Environment Variables (from Vercel)
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
