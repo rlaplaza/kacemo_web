@@ -5,7 +5,8 @@ const jwt = require('jsonwebtoken');
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 const JWT_SECRET = process.env.JWT_SECRET;
-const VERCEL_URL = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'; // For local testing
+// Use OAUTH_REDIRECT_BASE_URL for a stable redirect URI
+const OAUTH_REDIRECT_BASE_URL = process.env.OAUTH_REDIRECT_BASE_URL || 'http://localhost:3000'; 
 
 // Our hardcoded list of authorized emails for the prototype
 const AUTHORIZED_EMAILS = [
@@ -17,7 +18,7 @@ const AUTHORIZED_EMAILS = [
 const oAuth2Client = new OAuth2Client(
   GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET,
-  `${VERCEL_URL}/api/auth/google/callback` // Authorized redirect URI
+  `${OAUTH_REDIRECT_BASE_URL}/api/auth/google/callback` // Authorized redirect URI
 );
 
 module.exports = async (req, res) => {
@@ -32,14 +33,14 @@ module.exports = async (req, res) => {
 
   const { code, state } = req.query; // 'code' for callback, 'state' for redirect URL
 
-  if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !JWT_SECRET) {
+  if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !JWT_SECRET || !OAUTH_REDIRECT_BASE_URL) {
     console.error('Missing environment variables for Google OAuth or JWT.');
     return res.status(500).json({ message: 'Server configuration error: Missing environment variables for Google OAuth or JWT.' });
   }
   
   // Log the generated redirect URI for debugging
-  console.log('VERCEL_URL:', VERCEL_URL);
-  console.log('Generated Redirect URI:', `${VERCEL_URL}/api/auth/google/callback`);
+  console.log('OAUTH_REDIRECT_BASE_URL:', OAUTH_REDIRECT_BASE_URL);
+  console.log('Generated Redirect URI:', `${OAUTH_REDIRECT_BASE_URL}/api/auth/google/callback`);
 
 
   // Handle Google OAuth Callback
