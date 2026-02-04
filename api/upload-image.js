@@ -2,7 +2,7 @@ const axios = require('axios');
 const jwt = require('jsonwebtoken');
 const multer = require('multer'); // For handling multipart/form-data
 const { promisify } = require('util');
-const { AUTHORIZED_EMAILS } = require('../config/auth'); // Import from unified config
+const { AUTHORIZED_EMAILS } = require('../auth'); // Import from unified config (now in api)
 
 // Environment Variables
 const GITHUB_USERNAME = 'rlaplaza';

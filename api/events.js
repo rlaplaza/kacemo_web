@@ -1,6 +1,6 @@
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
-const { AUTHORIZED_EMAILS } = require('../config/auth'); // Import from unified config
+const { AUTHORIZED_EMAILS } = require('../auth'); // Import from unified config (now in api)
 
 const GITHUB_USERNAME = 'rlaplaza';
 const GITHUB_REPONAME = 'kacemo_web';
