@@ -2,7 +2,7 @@ const axios = require('axios');
 const jwt = require('jsonwebtoken');
 const multer = require('multer'); // For handling multipart/form-data
 const { promisify } = require('util');
-const { AUTHORIZED_EMAILS } = require('./auth/auth'); // Corrected import path (now in api/auth/auth.js) (now in api/auth/auth.js)
+const { AUTHORIZED_EMAILS } = require('./auth'); // Corrected import path (auth.js is now directly in api/)
 
 // Environment Variables
 const GITHUB_USERNAME = 'rlaplaza';
