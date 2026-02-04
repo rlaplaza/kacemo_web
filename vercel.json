@@ -16,5 +16,19 @@
         { "key": "Access-Control-Allow-Headers", "value": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version" }
       ]
     }
-  ]
+  ],
+  "functions": {
+    "api/auth/google/exchange-code.js": {
+      "includeFiles": ["api/auth.js"]
+    },
+    "api/events.js": {
+      "includeFiles": ["api/auth.js"]
+    },
+    "api/venues.js": {
+      "includeFiles": ["api/auth.js"]
+    },
+    "api/upload-image.js": {
+      "includeFiles": ["api/auth.js"]
+    }
+  }
 }
