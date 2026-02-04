@@ -56,9 +56,8 @@ module.exports = async (req, res) => {
     // Check if user is authorized
     if (!AUTHORIZED_EMAILS.includes(userEmail)) {
       console.warn('Unauthorized user attempt:', userEmail);
-      // Redirect to frontend error page or display error
-      const redirectFrontendUrl = state || '/';
-      return res.redirect(`${redirectFrontendUrl}#error=access_denied&email=${userEmail}`);
+      // Now, return a JSON error instead of redirecting
+      return res.status(403).json({ message: 'Acceso Denegado: Tu correo electrónico no está autorizado para acceder a esta aplicación.' });
     }
 
     // Generate a custom JWT for our application
@@ -68,15 +67,13 @@ module.exports = async (req, res) => {
       { expiresIn: '1h' } // Token expires in 1 hour
     );
 
-    // Redirect back to frontend, passing the appToken in fragment
-    const redirectFrontendUrl = state || '/'; // Use 'state' for frontend redirect
     console.log('Generated App JWT for user:', userEmail);
-    return res.redirect(`${redirectFrontendUrl}#token=${appToken}`);
+    // Return the appToken as a JSON response to the frontend
+    res.status(200).json({ token: appToken });
 
   } catch (error) {
     console.error('Error during Google OAuth code exchange:', error);
-    // Redirect to frontend error page
-    const redirectFrontendUrl = state || '/';
-    return res.redirect(`${redirectFrontendUrl}#error=authentication_failed`);
+    // Now, return a JSON error instead of redirecting
+    res.status(500).json({ message: 'Fallo de autenticación durante el intercambio de código.' });
   }
 };
