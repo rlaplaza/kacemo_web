@@ -3,6 +3,7 @@
 // in a database or a secure configuration service.
 const AUTHORIZED_EMAILS = [
   'laplazasolanas@gmail.com', // <<-- IMPORTANT: Replace with actual authorized Google email addresses
+  'adrianohernanvillar@gmail.com'
   // Add more authorized emails here
 ];
 
