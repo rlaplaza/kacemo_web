@@ -17,21 +17,21 @@ const NavigationBar = () => {
     <Navbar bg="dark" variant="dark" expand="lg">
       <Container>
         <LinkContainer to="/">
-          <Navbar.Brand>Seville Event Calendar</Navbar.Brand>
+          <Navbar.Brand>Calendario de Eventos de Sevilla</Navbar.Brand>
         </LinkContainer>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <LinkContainer to="/">
-              <Nav.Link>Calendar</Nav.Link>
+              <Nav.Link>Calendario</Nav.Link>
             </LinkContainer>
             {user && ( // Only show Add Event/Venue if authenticated
               <>
                 <LinkContainer to="/add-event">
-                  <Nav.Link>Add Event</Nav.Link>
+                  <Nav.Link>Añadir Evento</Nav.Link>
                 </LinkContainer>
                 <LinkContainer to="/add-venue">
-                  <Nav.Link>Add Venue</Nav.Link>
+                  <Nav.Link>Añadir Lugar</Nav.Link>
                 </LinkContainer>
               </>
             )}
@@ -40,12 +40,12 @@ const NavigationBar = () => {
             {user ? (
               <>
                 <Navbar.Text className="me-3">
-                  Signed in as: <span className="text-info">{user.name}</span>
+                  Sesión iniciada como: <span className="text-info">{user.name}</span>
                 </Navbar.Text>
-                <Button variant="outline-light" onClick={logout}>Logout</Button>
+                <Button variant="outline-light" onClick={logout}>Cerrar Sesión</Button>
               </>
             ) : (
-              <Button variant="outline-light" onClick={handleLogin}>Login with Google</Button>
+              <Button variant="outline-light" onClick={handleLogin}>Iniciar Sesión con Google</Button>
             )}
           </Nav>
         </Navbar.Collapse>

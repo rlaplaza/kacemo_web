@@ -64,7 +64,7 @@ module.exports = async (req, res) => {
       // Check if user is authorized
       if (!AUTHORIZED_EMAILS.includes(userEmail)) {
         console.warn('Unauthorized user attempt:', userEmail);
-        return res.status(403).send(`<h1>Access Denied</h1><p>Your email (${userEmail}) is not authorized to access this application.</p><p><a href="/">Go to Home</a></p>`);
+        return res.status(403).send(`<h1>Acceso Denegado</h1><p>Tu correo electrónico (${userEmail}) no está autorizado para acceder a esta aplicación.</p><p><a href="/">Ir a Inicio</a></p>`);
       }
 
       // Generate a custom JWT for our application

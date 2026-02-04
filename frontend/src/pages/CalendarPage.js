@@ -73,7 +73,7 @@ const CalendarPage = () => {
 
   return (
     <div>
-      <h1>Event Calendar</h1>
+      <h1>Calendario de Eventos</h1>
       <div style={{ height: '70vh' }}>
         <Calendar
           localizer={localizer}

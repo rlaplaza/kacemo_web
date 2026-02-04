@@ -42,7 +42,7 @@ ${description}`;
 
       if (response.status === 201) {
         setAlertVariant('success');
-        setAlertMessage('Event created successfully!');
+        setAlertMessage('¡Evento creado correctamente!');
         setShowAlert(true);
         setTitle('');
         setDate('');
@@ -52,7 +52,7 @@ ${description}`;
       }
     } catch (error) {
       setAlertVariant('danger');
-      setAlertMessage('Error creating event. Please try again.');
+      setAlertMessage('Error al crear el evento. Por favor, inténtalo de nuevo.');
       setShowAlert(true);
       console.error("Error creating event:", error);
     }
@@ -62,14 +62,14 @@ ${description}`;
     <Container>
       <Row className="justify-content-md-center">
         <Col md={6}>
-          <h1>Add New Event</h1>
+          <h1>Añadir Nuevo Evento</h1>
           {showAlert && <Alert variant={alertVariant} onClose={() => setShowAlert(false)} dismissible>{alertMessage}</Alert>}
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3" controlId="formEventTitle">
-              <Form.Label>Event Title</Form.Label>
+              <Form.Label>Título del Evento</Form.Label>
               <Form.Control 
                 type="text" 
-                placeholder="Enter event title" 
+                placeholder="Introduce el título del evento" 
                 value={title} 
                 onChange={(e) => setTitle(e.target.value)} 
                 required
@@ -77,7 +77,7 @@ ${description}`;
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formEventDate">
-              <Form.Label>Date</Form.Label>
+              <Form.Label>Fecha</Form.Label>
               <Form.Control 
                 type="date" 
                 value={date} 
@@ -87,7 +87,7 @@ ${description}`;
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formEventTime">
-              <Form.Label>Time</Form.Label>
+              <Form.Label>Hora</Form.Label>
               <Form.Control 
                 type="time" 
                 value={time} 
@@ -97,13 +97,13 @@ ${description}`;
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formEventVenue">
-              <Form.Label>Venue</Form.Label>
+              <Form.Label>Lugar</Form.Label>
               <Form.Select 
                 value={venue} 
                 onChange={(e) => setVenue(e.target.value)}
                 required
               >
-                <option value="">Select a venue</option>
+                <option value="">Selecciona un lugar</option>
                 {venues.map((v, index) => (
                   <option key={index} value={v.name}>{v.name}</option>
                 ))}
@@ -111,18 +111,18 @@ ${description}`;
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formEventDescription">
-              <Form.Label>Description</Form.Label>
+              <Form.Label>Descripción</Form.Label>
               <Form.Control 
                 as="textarea" 
                 rows={3} 
-                placeholder="Enter event description"
+                placeholder="Introduce la descripción del evento"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
             </Form.Group>
 
             <Button variant="primary" type="submit">
-              Submit
+              Enviar
             </Button>
           </Form>
         </Col>

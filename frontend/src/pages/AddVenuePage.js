@@ -20,7 +20,7 @@ const AddVenuePage = () => {
 
       if (response.status === 200) {
         setAlertVariant('success');
-        setAlertMessage('Venue added successfully! The page will reload to reflect the changes.');
+        setAlertMessage('¡Lugar añadido correctamente! La página se recargará para reflejar los cambios.');
         setShowAlert(true);
         setName('');
         setAddress('');
@@ -30,7 +30,7 @@ const AddVenuePage = () => {
       }
     } catch (error) {
       setAlertVariant('danger');
-      setAlertMessage('Error adding venue. Please try again.');
+      setAlertMessage('Error al añadir el lugar. Por favor, inténtalo de nuevo.');
       setShowAlert(true);
       console.error("Error adding venue:", error);
     }
@@ -40,14 +40,14 @@ const AddVenuePage = () => {
     <Container>
       <Row className="justify-content-md-center">
         <Col md={6}>
-          <h1>Add New Venue</h1>
+          <h1>Añadir Nuevo Lugar</h1>
           {showAlert && <Alert variant={alertVariant} onClose={() => setShowAlert(false)} dismissible>{alertMessage}</Alert>}
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3" controlId="formVenueName">
-              <Form.Label>Venue Name</Form.Label>
+              <Form.Label>Nombre del Lugar</Form.Label>
               <Form.Control 
                 type="text" 
-                placeholder="Enter venue name" 
+                placeholder="Introduce el nombre del lugar" 
                 value={name} 
                 onChange={(e) => setName(e.target.value)} 
                 required
@@ -55,10 +55,10 @@ const AddVenuePage = () => {
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formVenueAddress">
-              <Form.Label>Address</Form.Label>
+              <Form.Label>Dirección</Form.Label>
               <Form.Control 
                 type="text" 
-                placeholder="Enter venue address" 
+                placeholder="Introduce la dirección del lugar" 
                 value={address} 
                 onChange={(e) => setAddress(e.target.value)} 
                 required
@@ -66,7 +66,7 @@ const AddVenuePage = () => {
             </Form.Group>
 
             <Button variant="primary" type="submit">
-              Submit
+              Enviar
             </Button>
           </Form>
         </Col>

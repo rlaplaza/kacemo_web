@@ -41,7 +41,7 @@ module.exports = async (req, res) => {
       // For PUT requests (updating venues), authentication and authorization are required.
       const authHeader = req.headers.authorization;
       if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(401).json({ message: 'Authentication required: Bearer token missing.' });
+        return res.status(401).json({ message: 'Autenticación requerida: Token Bearer faltante.' });
       }
       const token = authHeader.split(' ')[1];
 
@@ -49,12 +49,12 @@ module.exports = async (req, res) => {
       try {
         decoded = jwt.verify(token, JWT_SECRET);
       } catch (err) {
-        return res.status(401).json({ message: 'Invalid or expired token.' });
+        return res.status(401).json({ message: 'Token inválido o expirado.' });
       }
 
       // Check if the authenticated user is authorized to create/update venues
       if (!AUTHORIZED_EMAILS.includes(decoded.email)) {
-        return res.status(403).json({ message: `Access Denied: Your email (${decoded.email}) is not authorized to update venues.` });
+        return res.status(403).json({ message: `Acceso Denegado: Tu correo electrónico (${decoded.email}) no está autorizado para actualizar lugares.` });
       }
 
       const { name, address } = req.body;
@@ -91,7 +91,7 @@ module.exports = async (req, res) => {
         }
       });
 
-      res.status(200).json({ message: 'Venue added successfully!' });
+      res.status(200).json({ message: '¡Lugar añadido correctamente!' });
 
     } else {
       res.status(405).end(`Method ${req.method} Not Allowed`);

@@ -12,17 +12,16 @@ const AuthCallback = () => {
     const token = params.get('token');
 
     if (token) {
-      login(token);
+      login(token, navigate); // Pass navigate to login
     } else {
-      // Handle error or no token case
-      console.error('No token found in callback URL.');
+      console.error('No se encontró el token en la URL de callback.');
       navigate('/'); // Redirect to home or error page
     }
   }, [location, navigate, login]);
 
   return (
     <div>
-      <p>Authenticating...</p>
+      <p>Autenticando...</p>
     </div>
   );
 };

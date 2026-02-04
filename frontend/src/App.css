@@ -1,38 +1,147 @@
+:root {
+  --color-background: #1a1a1a;
+  --color-text: #e0e0e0;
+  --color-primary: #8a0000; /* Dark Red - Anarchist touch */
+  --color-secondary: #008a8a; /* Teal/Cyan - Industrial accent */
+  --color-accent: #ffcc00; /* Yellow - Warning/Highlight */
+  --color-dark-gray: #333333;
+  --color-light-gray: #b0b0b0;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+
 .App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.navbar {
+  background-color: var(--color-dark-gray) !important;
+  border-bottom: 2px solid var(--color-primary); /* Strong border */
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.navbar-brand, .nav-link {
+  color: var(--color-text) !important;
+  font-weight: 700; /* Montserrat Bold */
+}
+
+.navbar-brand:hover, .nav-link:hover {
+  color: var(--color-accent) !important;
+}
+
+.btn-outline-light {
+  color: var(--color-text);
+  border-color: var(--color-secondary);
+}
+
+.btn-outline-light:hover {
+  background-color: var(--color-secondary);
+  color: var(--color-background);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-primary);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 1rem;
+}
+
+.container.mt-4 {
+  flex-grow: 1;
+  padding-top: 20px;
+}
+
+/* Form styling */
+.form-label {
+  color: var(--color-light-gray);
+}
+
+.form-control, .form-select {
+  background-color: var(--color-dark-gray);
+  color: var(--color-text);
+  border: 1px solid var(--color-secondary);
+}
+
+.form-control:focus, .form-select:focus {
+  background-color: var(--color-dark-gray);
+  color: var(--color-text);
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 0.25rem rgba(255, 204, 0, 0.25); /* Yellow glow on focus */
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-secondary);
+  border-color: var(--color-secondary);
+}
+
+/* React Big Calendar overrides */
+.rbc-calendar {
+  background-color: var(--color-dark-gray);
+  border: 1px solid var(--color-secondary);
+  color: var(--color-text);
+  font-family: 'Montserrat', sans-serif;
+}
+
+.rbc-header {
+  background-color: var(--color-dark-gray);
+  color: var(--color-accent);
+  text-transform: uppercase;
+  font-weight: 700;
+  border-bottom: 1px solid var(--color-primary);
+}
+
+.rbc-off-range-bg {
+  background-color: #2a2a2a; /* Slightly different dark for off-range dates */
+}
+
+.rbc-date-cell {
+  color: var(--color-text);
+}
+
+.rbc-current-time-indicator {
+  background-color: var(--color-primary);
+}
+
+.rbc-today {
+  background-color: #3d3d3d;
+}
+
+.rbc-button-link {
+  color: var(--color-text);
+}
+
+.rbc-toolbar button {
+  color: var(--color-text);
+  background-color: var(--color-dark-gray);
+  border: 1px solid var(--color-secondary);
+}
+
+.rbc-toolbar button:hover {
+  background-color: var(--color-secondary);
+  color: var(--color-background);
+}
+
+.rbc-event {
+  background-color: var(--color-secondary);
+  border-color: var(--color-secondary);
+  color: var(--color-background);
+  font-weight: 700;
+  border-radius: 3px;
+}
+
+.rbc-event-content {
+  color: var(--color-background);
 }

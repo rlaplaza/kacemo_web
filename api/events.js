@@ -40,7 +40,7 @@ module.exports = async (req, res) => {
       // For POST requests (creating events), authentication and authorization are required.
       const authHeader = req.headers.authorization;
       if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(401).json({ message: 'Authentication required: Bearer token missing.' });
+        return res.status(401).json({ message: 'Autenticación requerida: Token Bearer faltante.' });
       }
       const token = authHeader.split(' ')[1];
 
@@ -48,12 +48,12 @@ module.exports = async (req, res) => {
       try {
         decoded = jwt.verify(token, JWT_SECRET);
       } catch (err) {
-        return res.status(401).json({ message: 'Invalid or expired token.' });
+        return res.status(401).json({ message: 'Token inválido o expirado.' });
       }
 
       // Check if the authenticated user is authorized to create events
       if (!AUTHORIZED_EMAILS.includes(decoded.email)) {
-        return res.status(403).json({ message: `Access Denied: Your email (${decoded.email}) is not authorized to create events.` });
+        return res.status(403).json({ message: `Acceso Denegado: Tu correo electrónico (${decoded.email}) no está autorizado para crear eventos.` });
       }
 
       const { title, body } = req.body;
