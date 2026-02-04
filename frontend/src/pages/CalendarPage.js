@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 const localizer = momentLocalizer(moment);
@@ -9,6 +10,7 @@ const localizer = momentLocalizer(moment);
 const CalendarPage = () => {
   const [events, setEvents] = useState([]);
   const [venues, setVenues] = useState([]); // State to hold venues
+  const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
     const fetchVenues = async () => {
@@ -48,7 +50,8 @@ const CalendarPage = () => {
                 venue: venueMatch ? venueMatch[1].trim() : '',
                 description: descriptionMatch ? descriptionMatch[1].trim() : '',
                 url: issue.html_url
-              }
+              },
+              id: issue.number // Add issue number as id for routing
             };
           }
           return null;
@@ -64,11 +67,7 @@ const CalendarPage = () => {
   }, []);
   
   const handleSelectEvent = (event) => {
-    const venueName = event.resource.venue;
-    const venue = venues.find(v => v.name === venueName);
-    const address = venue ? venue.address : 'Address not found';
-    const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
-    window.open(googleMapsUrl, "_blank");
+    navigate(`/events/${event.id}`); // Navigate to EventDetailPage
   };
 
   return (

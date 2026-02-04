@@ -4,6 +4,7 @@ import NavigationBar from './components/NavigationBar';
 import CalendarPage from './pages/CalendarPage';
 import AddEventPage from './pages/AddEventPage';
 import AddVenuePage from './pages/AddVenuePage';
+import EventDetailPage from './pages/EventDetailPage'; // Import EventDetailPage
 import AuthCallback from './AuthCallback'; // Import AuthCallback
 import ProtectedRoute from './components/ProtectedRoute'; // Import ProtectedRoute
 import { AuthProvider } from './AuthContext'; // Import AuthProvider
@@ -23,6 +24,7 @@ function App() {
                 <Route path="/" element={<CalendarPage />} />
                 <Route path="/add-event" element={<ProtectedRoute><AddEventPage /></ProtectedRoute>} />
                 <Route path="/add-venue" element={<ProtectedRoute><AddVenuePage /></ProtectedRoute>} />
+                <Route path="/events/:eventId" element={<EventDetailPage />} /> {/* New route for EventDetailPage */}
                 <Route path="/auth/callback" element={<AuthCallback />} />
               </Routes>
             </div>
