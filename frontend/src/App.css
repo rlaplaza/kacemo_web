@@ -1,6 +1,5 @@
-/* Map your existing semantic names to the improved palette */
+/* Backward-compatible aliases (so your earlier semantic naming still works) */
 :root {
-  /* Backward-compatible aliases (so the rest of your CSS remains readable) */
   --color-bg-dark: var(--color-bg);
   --color-text-light: var(--color-text);
 
@@ -19,9 +18,10 @@
   flex-direction: column;
 }
 
-/* Navbar Styling */
+/* Navbar */
 .navbar {
-  background-color: var(--color-neutral-dark) !important;
+  background-color: rgba(27, 29, 36, 0.86) !important; /* surface-1 w/ translucency */
+  backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--color-border-soft);
   box-shadow: var(--shadow-sm);
 }
@@ -47,63 +47,43 @@
   color: var(--color-highlight-green) !important;
 }
 
-/* Buttons */
-.btn-outline-light {
-  color: var(--color-text-light);
-  border-color: var(--color-highlight-blue);
-  border-radius: var(--radius-sm);
-}
-
-.btn-outline-light:hover {
-  background-color: var(--color-highlight-blue);
-  color: var(--color-bg-dark);
-  border-color: var(--color-highlight-blue);
-}
-
-.btn-primary {
-  background-color: var(--color-highlight-blue);
-  border-color: var(--color-highlight-blue);
-  font-weight: 700;
-  letter-spacing: 0.3px;
-  border-radius: var(--radius-sm);
-}
-
-.btn-primary:hover {
-  background-color: transparent;
-  border-color: var(--color-highlight-blue);
-  color: var(--color-highlight-blue);
-}
-
-/* Headings (less shouty, more modern) */
-h1, h2, h3, h4, h5, h6 {
-  color: var(--color-highlight-blue);
-  font-family: var(--font-display);
-  font-weight: 700;
-
-  /* Keep the “tone” but reduce harshness */
-  text-transform: none;
-  letter-spacing: 0.2px;
-
-  margin-bottom: 1.25rem;
-}
-
+/* Layout spacing */
 .container.mt-4 {
   flex-grow: 1;
-  padding-top: 20px;
+  padding-top: var(--space-6);
+  padding-bottom: var(--space-7);
 }
+
+/* Headings: sleek + minimal (no forced uppercase) */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-text-light);
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  margin: 0 0 var(--space-5);
+}
+
+h1 { font-size: 1.9rem; }
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1.25rem; }
 
 /* Forms */
 .form-label {
   color: var(--color-text-muted);
   font-weight: 600;
+  margin-bottom: var(--space-2);
 }
 
 .form-control,
 .form-select {
-  background-color: var(--color-neutral-dark);
+  background-color: rgba(27, 29, 36, 0.78);
   color: var(--color-text-light);
-  border: 1px solid var(--color-border);
+
+  /* WCAG non-text contrast: use strong border for boundaries */
+  border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-sm);
+
+  padding: 0.6rem 0.75rem;
   box-shadow: none;
 }
 
@@ -113,28 +93,66 @@ h1, h2, h3, h4, h5, h6 {
 
 .form-control:focus,
 .form-select:focus {
-  background-color: var(--color-neutral-dark);
+  background-color: rgba(27, 29, 36, 0.92);
   color: var(--color-text-light);
   border-color: var(--color-highlight-blue);
   box-shadow: var(--focus-ring);
 }
 
-/* Alerts */
+/* Buttons (minimal defaults) */
+.btn {
+  border-radius: var(--radius-sm);
+  transition: background-color 140ms ease, color 140ms ease, border-color 140ms ease, transform 80ms ease;
+}
+
+.btn:active {
+  transform: translateY(0.5px);
+}
+
+/* Primary button: ensure text contrast on blue */
+.btn-primary {
+  background-color: var(--color-highlight-blue);
+  border-color: var(--color-highlight-blue);
+  color: #0B0F14; /* dark text ensures strong contrast on blue */
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.btn-primary:hover {
+  background-color: rgba(47, 128, 237, 0.85);
+  border-color: rgba(47, 128, 237, 0.85);
+  color: #0B0F14;
+}
+
+/* Outline button */
+.btn-outline-light {
+  color: var(--color-text-light);
+  border-color: var(--color-border-strong);
+  background-color: transparent;
+}
+
+.btn-outline-light:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+  border-color: rgba(106, 167, 255, 0.55);
+  color: var(--color-text-light);
+}
+
+/* Alerts: use translucent tints (sleek) */
 .alert-success {
-  background-color: rgba(39, 174, 96, 0.18);
+  background-color: rgba(39, 174, 96, 0.14);
   color: var(--color-text-light);
   border: 1px solid rgba(39, 174, 96, 0.35);
 }
 
 .alert-danger {
-  background-color: rgba(235, 87, 87, 0.18);
+  background-color: rgba(235, 87, 87, 0.14);
   color: var(--color-text-light);
   border: 1px solid rgba(235, 87, 87, 0.35);
 }
 
-/* Cards */
+/* Cards: minimal borders, soft shadows */
 .card {
-  background-color: var(--color-neutral-dark) !important;
+  background-color: rgba(27, 29, 36, 0.72) !important;
   border: 1px solid var(--color-border-soft) !important;
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
@@ -142,22 +160,22 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .card-header {
-  background-color: var(--color-neutral-medium) !important;
+  background-color: rgba(35, 38, 52, 0.72) !important;
   border-bottom: 1px solid var(--color-border-soft) !important;
   font-weight: 600;
 }
 
+/* Card links inherit global <a> rules; keep this only if needed */
 .card-link {
   color: var(--color-highlight-blue) !important;
 }
-
 .card-link:hover {
-  color: var(--color-text-light) !important;
+  color: var(--color-link-hover) !important;
 }
 
 /* React Big Calendar overrides */
 .rbc-calendar {
-  background-color: var(--color-neutral-dark);
+  background-color: rgba(27, 29, 36, 0.72);
   border: 1px solid var(--color-border-soft);
   color: var(--color-text-light);
   font-family: var(--font-sans);
@@ -167,16 +185,15 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .rbc-header {
-  background-color: var(--color-neutral-medium);
+  background-color: rgba(35, 38, 52, 0.65);
   color: var(--color-text-light);
-  text-transform: none;
   font-weight: 700;
   border-bottom: 1px solid var(--color-border-soft);
-  padding: 0.75rem 0;
+  padding: var(--space-3) 0;
 }
 
 .rbc-off-range-bg {
-  background-color: var(--color-bg-dark);
+  background-color: rgba(18, 19, 24, 0.9);
 }
 
 .rbc-date-cell {
@@ -199,23 +216,23 @@ h1, h2, h3, h4, h5, h6 {
 
 .rbc-toolbar button {
   color: var(--color-text-light);
-  background-color: var(--color-neutral-dark);
-  border: 1px solid var(--color-border-soft);
+  background-color: rgba(27, 29, 36, 0.55);
+  border: 1px solid var(--color-border-strong); /* UI boundary visibility */
   border-radius: var(--radius-sm);
 }
 
 .rbc-toolbar button:hover {
-  background-color: rgba(47, 128, 237, 0.14);
-  border-color: rgba(47, 128, 237, 0.35);
+  background-color: rgba(255, 255, 255, 0.06);
+  border-color: rgba(106, 167, 255, 0.55);
 }
 
 .rbc-event {
-  background-color: rgba(39, 174, 96, 0.85);
-  border: 1px solid rgba(39, 174, 96, 0.85);
+  background-color: rgba(39, 174, 96, 0.86);
+  border: 1px solid rgba(39, 174, 96, 0.86);
   color: #0B0F14;
   font-weight: 700;
-  border-radius: 5px;
-  opacity: 0.95;
+  border-radius: 6px;
+  opacity: 0.96;
 }
 
 .rbc-event:hover {
