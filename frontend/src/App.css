@@ -1,20 +1,16 @@
+/* Map your existing semantic names to the improved palette */
 :root {
-  /* Main Palette: Grays, Black, White */
-  --color-bg-dark: #1A1A1A; /* Near Black */
-  --color-text-light: #E0E0E0; /* Off-White */
-  --color-neutral-dark: #2C2C2C; /* Dark Gray for elements/cards */
-  --color-neutral-medium: #4A4A4A; /* Medium Gray for borders/subtle elements */
-  --color-neutral-light: #9E9E9E; /* Light Gray for labels/placeholders */
+  /* Backward-compatible aliases (so the rest of your CSS remains readable) */
+  --color-bg-dark: var(--color-bg);
+  --color-text-light: var(--color-text);
 
-  /* Highlight Palette: Matte Dark Red, Green, Blue */
-  --color-highlight-red: #B00020;   /* Matte Dark Red (Errors, danger) */
-  --color-highlight-green: #388E3C; /* Matte Dark Green (Success, positive) */
-  --color-highlight-blue: #1976D2;  /* Matte Dark Blue (Primary actions, accents) */
-}
+  --color-neutral-dark: var(--color-surface-1);
+  --color-neutral-medium: var(--color-surface-2);
+  --color-neutral-light: var(--color-text-muted);
 
-body {
-  background-color: var(--color-bg-dark);
-  color: var(--color-text-light);
+  --color-highlight-blue: var(--color-primary);
+  --color-highlight-green: var(--color-success);
+  --color-highlight-red: var(--color-danger);
 }
 
 .App {
@@ -26,15 +22,20 @@ body {
 /* Navbar Styling */
 .navbar {
   background-color: var(--color-neutral-dark) !important;
-  border-bottom: 2px solid var(--color-highlight-blue); /* Use blue for accent */
+  border-bottom: 1px solid var(--color-border-soft);
+  box-shadow: var(--shadow-sm);
 }
 
-.navbar-brand, .nav-link {
+.navbar-brand,
+.nav-link {
   color: var(--color-text-light) !important;
+  font-family: var(--font-display);
   font-weight: 700;
+  letter-spacing: 0.2px;
 }
 
-.navbar-brand:hover, .nav-link:hover {
+.navbar-brand:hover,
+.nav-link:hover {
   color: var(--color-highlight-blue) !important;
 }
 
@@ -43,12 +44,14 @@ body {
 }
 
 .navbar-text .text-info {
-  color: var(--color-highlight-green) !important; /* Use green for logged in user */
+  color: var(--color-highlight-green) !important;
 }
 
+/* Buttons */
 .btn-outline-light {
   color: var(--color-text-light);
   border-color: var(--color-highlight-blue);
+  border-radius: var(--radius-sm);
 }
 
 .btn-outline-light:hover {
@@ -57,13 +60,31 @@ body {
   border-color: var(--color-highlight-blue);
 }
 
-/* Headings */
-h1, h2, h3, h4, h5, h6 {
-  color: var(--color-highlight-blue); /* Use blue for headings */
+.btn-primary {
+  background-color: var(--color-highlight-blue);
+  border-color: var(--color-highlight-blue);
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 1.5rem;
+  letter-spacing: 0.3px;
+  border-radius: var(--radius-sm);
+}
+
+.btn-primary:hover {
+  background-color: transparent;
+  border-color: var(--color-highlight-blue);
+  color: var(--color-highlight-blue);
+}
+
+/* Headings (less shouty, more modern) */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-highlight-blue);
+  font-family: var(--font-display);
+  font-weight: 700;
+
+  /* Keep the “tone” but reduce harshness */
+  text-transform: none;
+  letter-spacing: 0.2px;
+
+  margin-bottom: 1.25rem;
 }
 
 .container.mt-4 {
@@ -71,61 +92,59 @@ h1, h2, h3, h4, h5, h6 {
   padding-top: 20px;
 }
 
-/* Form Styling */
+/* Forms */
 .form-label {
-  color: var(--color-neutral-light);
+  color: var(--color-text-muted);
   font-weight: 600;
 }
 
-.form-control, .form-select {
+.form-control,
+.form-select {
   background-color: var(--color-neutral-dark);
   color: var(--color-text-light);
-  border: 1px solid var(--color-neutral-medium);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  box-shadow: none;
 }
 
-.form-control:focus, .form-select:focus {
+.form-control::placeholder {
+  color: var(--color-text-faint);
+}
+
+.form-control:focus,
+.form-select:focus {
   background-color: var(--color-neutral-dark);
   color: var(--color-text-light);
   border-color: var(--color-highlight-blue);
-  box-shadow: 0 0 0 0.25rem rgba(25, 118, 210, 0.25); /* Blue glow on focus */
+  box-shadow: var(--focus-ring);
 }
 
-.btn-primary {
-  background-color: var(--color-highlight-blue);
-  border-color: var(--color-highlight-blue);
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-}
-
-.btn-primary:hover {
-  background-color: var(--color-neutral-dark);
-  border-color: var(--color-highlight-blue);
-  color: var(--color-highlight-blue);
-}
-
-/* Alert Styling */
+/* Alerts */
 .alert-success {
-  background-color: var(--color-highlight-green);
+  background-color: rgba(39, 174, 96, 0.18);
   color: var(--color-text-light);
-  border-color: var(--color-highlight-green);
+  border: 1px solid rgba(39, 174, 96, 0.35);
 }
 
 .alert-danger {
-  background-color: var(--color-highlight-red);
+  background-color: rgba(235, 87, 87, 0.18);
   color: var(--color-text-light);
-  border-color: var(--color-highlight-red);
+  border: 1px solid rgba(235, 87, 87, 0.35);
 }
 
-/* Card Styling */
+/* Cards */
 .card {
   background-color: var(--color-neutral-dark) !important;
-  border: 1px solid var(--color-neutral-medium) !important;
+  border: 1px solid var(--color-border-soft) !important;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
 }
 
 .card-header {
   background-color: var(--color-neutral-medium) !important;
-  border-bottom: 1px solid var(--color-neutral-dark) !important;
+  border-bottom: 1px solid var(--color-border-soft) !important;
+  font-weight: 600;
 }
 
 .card-link {
@@ -139,38 +158,39 @@ h1, h2, h3, h4, h5, h6 {
 /* React Big Calendar overrides */
 .rbc-calendar {
   background-color: var(--color-neutral-dark);
-  border: 1px solid var(--color-neutral-medium);
+  border: 1px solid var(--color-border-soft);
   color: var(--color-text-light);
-  font-family: 'Montserrat', sans-serif;
-  border-radius: 8px;
+  font-family: var(--font-sans);
+  border-radius: var(--radius-md);
   overflow: hidden;
+  box-shadow: var(--shadow-sm);
 }
 
 .rbc-header {
-  background-color: var(--color-neutral-dark);
-  color: var(--color-text-light); /* Make headers readable */
-  text-transform: uppercase;
+  background-color: var(--color-neutral-medium);
+  color: var(--color-text-light);
+  text-transform: none;
   font-weight: 700;
-  border-bottom: 1px solid var(--color-neutral-medium);
+  border-bottom: 1px solid var(--color-border-soft);
   padding: 0.75rem 0;
 }
 
 .rbc-off-range-bg {
-  background-color: var(--color-bg-dark); /* Use main background for off-range */
+  background-color: var(--color-bg-dark);
 }
 
 .rbc-date-cell {
-  color: var(--color-text-light);
+  color: var(--color-text-muted);
 }
 
 .rbc-current-time-indicator {
-  background-color: var(--color-highlight-red); /* Red for current time indicator */
+  background-color: var(--color-highlight-red);
 }
 
 .rbc-today {
-  background-color: var(--color-bg-dark); /* Today's background */
-  border: 1px solid var(--color-highlight-blue); /* Highlight today with blue border */
-  border-radius: 4px;
+  background-color: rgba(47, 128, 237, 0.08);
+  border: 1px solid rgba(47, 128, 237, 0.35);
+  border-radius: 6px;
 }
 
 .rbc-button-link {
@@ -180,23 +200,22 @@ h1, h2, h3, h4, h5, h6 {
 .rbc-toolbar button {
   color: var(--color-text-light);
   background-color: var(--color-neutral-dark);
-  border: 1px solid var(--color-neutral-medium);
-  border-radius: 4px;
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-sm);
 }
 
 .rbc-toolbar button:hover {
-  background-color: var(--color-highlight-blue);
-  color: var(--color-bg-dark);
-  border-color: var(--color-highlight-blue);
+  background-color: rgba(47, 128, 237, 0.14);
+  border-color: rgba(47, 128, 237, 0.35);
 }
 
 .rbc-event {
-  background-color: var(--color-highlight-green); /* Use green for events */
-  border-color: var(--color-highlight-green);
-  color: var(--color-bg-dark); /* Ensure contrast for event text */
-  font-weight: 600;
-  border-radius: 3px;
-  opacity: 0.9;
+  background-color: rgba(39, 174, 96, 0.85);
+  border: 1px solid rgba(39, 174, 96, 0.85);
+  color: #0B0F14;
+  font-weight: 700;
+  border-radius: 5px;
+  opacity: 0.95;
 }
 
 .rbc-event:hover {
@@ -204,21 +223,16 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .rbc-event-content {
-  color: var(--color-bg-dark); /* Ensure contrast for event text */
+  color: #0B0F14;
 }
 
-.rbc-month-view .rbc-day-bg + .rbc-day-bg {
-  border-left: 1px solid var(--color-neutral-medium);
-}
-
-.rbc-time-view .rbc-day-bg + .rbc-day-bg {
-  border-left: 1px solid var(--color-neutral-medium);
-}
-
+.rbc-month-view .rbc-day-bg + .rbc-day-bg,
+.rbc-time-view .rbc-day-bg + .rbc-day-bg,
 .rbc-time-header.rbc-overflowing {
-  border-right: 1px solid var(--color-neutral-medium);
+  border-left: 1px solid var(--color-border-soft);
 }
 
 .rbc-row-segment .rbc-event-content {
   white-space: normal;
 }
+``

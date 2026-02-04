@@ -1,5 +1,6 @@
 const { OAuth2Client } = require('google-auth-library');
 const jwt = require('jsonwebtoken');
+const { AUTHORIZED_EMAILS } = require('../config/auth'); // Import from unified config
 
 // Environment Variables (from Vercel)
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
@@ -7,12 +8,6 @@ const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 const JWT_SECRET = process.env.JWT_SECRET;
 // Use OAUTH_REDIRECT_URI for the FULL stable redirect URI
 const OAUTH_REDIRECT_URI = process.env.OAUTH_REDIRECT_URI || 'http://localhost:3000/api/auth/google/callback'; 
-
-// Our hardcoded list of authorized emails for the prototype
-const AUTHORIZED_EMAILS = [
-  'laplazasolanas@gmail.com', // <<-- IMPORTANT: Replace with actual authorized Google email addresses
-  // Add more authorized emails here
-];
 
 // Initialize Google OAuth2 Client
 const oAuth2Client = new OAuth2Client(

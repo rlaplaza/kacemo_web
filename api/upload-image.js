@@ -2,6 +2,7 @@ const axios = require('axios');
 const jwt = require('jsonwebtoken');
 const multer = require('multer'); // For handling multipart/form-data
 const { promisify } = require('util');
+const { AUTHORIZED_EMAILS } = require('../config/auth'); // Import from unified config
 
 // Environment Variables
 const GITHUB_USERNAME = 'rlaplaza';
@@ -9,12 +10,6 @@ const GITHUB_REPONAME = 'kacemo_web';
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN; // App's PAT
 const JWT_SECRET = process.env.JWT_SECRET;
 const IMAGE_UPLOAD_PATH = 'public/event-posters'; // Folder in GitHub repo to store images
-
-// Hardcoded authorized emails (must match others)
-const AUTHORIZED_EMAILS = [
-  'laplazasolanas@gmail.com', // <<-- IMPORTANT: Replace with actual authorized Google email addresses
-  // Add more authorized emails here
-];
 
 // Configure Multer for in-memory storage
 const upload = multer({

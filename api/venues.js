@@ -1,17 +1,12 @@
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
+const { AUTHORIZED_EMAILS } = require('../config/auth'); // Import from unified config
 
 const GITHUB_USERNAME = 'rlaplaza';
 const GITHUB_REPONAME = 'kacemo_web';
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN; // Application's PAT for GitHub API calls
 const JWT_SECRET = process.env.JWT_SECRET;
 const VENUES_FILE_PATH = 'frontend/src/data/venues.json';
-
-// Our hardcoded list of authorized emails for the prototype (must match those in api/auth/google.js)
-const AUTHORIZED_EMAILS = [
-  'laplazasolanas@gmail.com', // <<-- IMPORTANT: Replace with actual authorized Google email addresses
-  // Add more authorized emails here
-];
 
 module.exports = async (req, res) => {
   // Handle CORS preflight requests

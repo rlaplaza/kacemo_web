@@ -1,17 +1,67 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700&family=Roboto+Mono:wght@400;600;700&display=swap');
+
+/* Design tokens (global) */
+:root {
+  /* Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --font-display: 'Montserrat', var(--font-sans);
+  --font-mono: 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    'Liberation Mono', 'Courier New', monospace;
+
+  --text-size: 16px;
+  --line-height: 1.55;
+
+  /* Radii / shadows */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.35);
+  --shadow-md: 0 8px 24px rgba(0,0,0,.35);
+
+  /* Core palette (same tone, refined) */
+  --color-bg: #121318;          /* near-black, slightly cool */
+  --color-surface-1: #1B1D24;   /* cards, panels */
+  --color-surface-2: #232634;   /* headers, elevated surfaces */
+  --color-border: #34384A;      /* subtle border */
+  --color-border-soft: rgba(255,255,255,.08);
+
+  --color-text: #E7EAF0;        /* primary text */
+  --color-text-muted: #A8AEBE;  /* labels, secondary */
+  --color-text-faint: #7D8496;  /* placeholders/hints */
+
+  /* Accents (same family: blue/green/red) */
+  --color-primary: #2F80ED;     /* blue */
+  --color-success: #27AE60;     /* green */
+  --color-danger: #EB5757;      /* red */
+
+  /* Focus ring */
+  --focus-ring: 0 0 0 0.25rem rgba(47, 128, 237, 0.28);
+}
+
+html {
+  font-size: var(--text-size);
+}
 
 body {
   margin: 0;
-  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: var(--font-sans);
+  line-height: var(--line-height);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: var(--color-background); /* Use CSS variable for background */
-  color: var(--color-text); /* Use CSS variable for text */
+
+  background-color: var(--color-bg);
+  color: var(--color-text);
 }
 
-code {
-  font-family: 'Roboto Mono', source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+code, pre, kbd, samp {
+  font-family: var(--font-mono);
+}
+
+/* Better default focus (keyboard accessibility) */
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+  border-radius: 6px;
 }
