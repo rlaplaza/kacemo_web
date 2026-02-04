@@ -17,7 +17,7 @@ const NavigationBar = () => {
     <Navbar bg="dark" variant="dark" expand="lg">
       <Container>
         <LinkContainer to="/">
-          <Navbar.Brand>Calendario de Eventos de Sevilla</Navbar.Brand>
+          <Navbar.Brand>KACEMOS HOY COMPAE</Navbar.Brand>
         </LinkContainer>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
