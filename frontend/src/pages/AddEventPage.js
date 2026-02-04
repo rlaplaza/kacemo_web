@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Button, Container, Row, Col, Alert } from 'react-bootstrap';
+import { Form, Button, Container, Row, Col, Alert, Spinner } from 'react-bootstrap'; // Import Spinner
 import axios from 'axios';
 
 const AddEventPage = () => {
@@ -8,6 +8,9 @@ const AddEventPage = () => {
   const [time, setTime] = useState('');
   const [venue, setVenue] = useState('');
   const [description, setDescription] = useState('');
+  const [imageFile, setImageFile] = useState(null); // New state for image file
+  const [imageUrl, setImageUrl] = useState(''); // New state for uploaded image URL
+  const [uploadingImage, setUploadingImage] = useState(false); // New state for upload status
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertVariant, setAlertVariant] = useState('success');
@@ -25,14 +28,53 @@ const AddEventPage = () => {
     fetchVenues();
   }, []);
 
+  const handleFileChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setImageFile(e.target.files[0]);
+    } else {
+      setImageFile(null);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setUploadingImage(true); // Start image upload
+    setImageUrl(''); // Clear previous image URL
 
-    const issueBody = `**Date:** ${date}
-**Time:** ${time}
-**Venue:** ${venue}
-**Description:**
-${description}`;
+    let finalImageUrl = '';
+
+    if (imageFile) {
+      const formData = new FormData();
+      formData.append('image', imageFile);
+
+      try {
+        const uploadResponse = await axios.post('/api/upload-image', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+        finalImageUrl = uploadResponse.data.url;
+        setImageUrl(finalImageUrl); // Store URL for display/confirmation
+        setUploadingImage(false); // Image upload finished
+      } catch (uploadError) {
+        console.error("Error uploading image:", uploadError.response ? uploadError.response.data : uploadError.message);
+        setAlertVariant('danger');
+        setAlertMessage('Error al subir la imagen. Por favor, inténtalo de nuevo.');
+        setShowAlert(true);
+        setUploadingImage(false);
+        return; // Stop further submission if image upload fails
+      }
+    } else {
+      setUploadingImage(false); // No image to upload
+    }
+
+    // Construct issue body with image URL if available
+    const issueBody = `**Fecha:** ${date}
+**Hora:** ${time}
+**Lugar:** ${venue}
+**Descripción:**
+${description}
+${finalImageUrl ? `**Póster:** ![Póster del evento](${finalImageUrl})` : ''}`; // Add image if URL exists
 
     try {
       const response = await axios.post('/api/events', {
@@ -44,11 +86,14 @@ ${description}`;
         setAlertVariant('success');
         setAlertMessage('¡Evento creado correctamente!');
         setShowAlert(true);
+        // Clear all fields after successful submission
         setTitle('');
         setDate('');
         setTime('');
         setVenue('');
         setDescription('');
+        setImageFile(null);
+        setImageUrl('');
       }
     } catch (error) {
       setAlertVariant('danger');
@@ -121,8 +166,20 @@ ${description}`;
               />
             </Form.Group>
 
-            <Button variant="primary" type="submit">
-              Enviar
+            {/* New Image Upload Field */}
+            <Form.Group className="mb-3" controlId="formEventImage">
+              <Form.Label>Póster del Evento (opcional)</Form.Label>
+              <Form.Control 
+                type="file" 
+                accept="image/*" 
+                onChange={handleFileChange} 
+              />
+              {uploadingImage && <Spinner animation="border" size="sm" className="ms-2" />}
+              {imageUrl && <p className="text-success mt-2">Imagen subida: <a href={imageUrl} target="_blank" rel="noopener noreferrer">{imageUrl}</a></p>}
+            </Form.Group>
+
+            <Button variant="primary" type="submit" disabled={uploadingImage}>
+              {uploadingImage ? 'Subiendo imagen...' : 'Enviar'}
             </Button>
           </Form>
         </Col>
