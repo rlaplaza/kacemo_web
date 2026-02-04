@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
     if (navigate) navigate('/');
   }, []);
 
-  const login = useCallback((jwtToken, navigate) => {
+  const login = useCallback((jwtToken) => { // Removed 'navigate' parameter
     console.log("AuthContext: login called with token (first 10 chars):", jwtToken ? jwtToken.substring(0, 10) : 'null');
     sessionStorage.setItem('app_jwt_token', jwtToken);
     try {
@@ -26,10 +26,10 @@ export const AuthProvider = ({ children }) => {
       setUser(decodedUser);
       setToken(jwtToken);
       axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;
-      if (navigate) navigate('/');
+      // Removed navigate here: if (navigate) navigate('/');
     } catch (error) {
       console.error("AuthContext: Error decoding JWT during login:", error);
-      logout(navigate); // Log out if decoding fails
+      logout(); // Call logout without navigate
     }
   }, [logout]); // logout is a dependency because it's called internally
 
