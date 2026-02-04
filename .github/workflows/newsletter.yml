@@ -9,6 +9,9 @@ on:
 jobs:
   build_and_send:
     runs-on: ubuntu-latest
+    permissions:
+      issues: read # Grant read permission for issues
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
@@ -20,22 +23,93 @@ jobs:
 
     - name: Generate Newsletter Content
       id: generate_content
-      run: |
-        # Placeholder for script to fetch issues and generate content
-        # This will be replaced with a script that uses the GitHub API
-        echo "## Upcoming Events in Seville" > newsletter.md
-        echo "" >> newsletter.md
-        echo "* **Event 1:** Paella Festival - 2026-02-10 at Plaza de España" >> newsletter.md
-        echo "* **Event 2:** Flamenco Night - 2026-02-12 at Triana" >> newsletter.md
-        NEWSLETTER_CONTENT=$(cat newsletter.md)
-        echo "::set-output name=content::$NEWSLETTER_CONTENT"
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const moment = require('moment'); // Moment.js is available with Node.js
+          const owner = process.env.GITHUB_REPOSITORY.split('/')[0];
+          const repo = process.env.GITHUB_REPOSITORY.split('/')[1];
 
+          // Fetch all open issues (events)
+          const { data: issues } = await github.rest.issues.listForRepo({
+            owner,
+            repo,
+            state: 'open'
+          });
+
+          let newsletterContent = '## Upcoming Events in Seville\n\n';
+          let hasUpcomingEvents = false;
+
+          // Define the next 7 days range
+          const today = moment().startOf('day');
+          const nextWeek = moment().add(7, 'days').endOf('day');
+
+          for (const issue of issues) {
+            const body = issue.body;
+            const title = issue.title;
+
+            const dateMatch = body.match(/\*\*Date:\*\* (.*)/);
+            const timeMatch = body.match(/\*\*Time:\*\* (.*)/);
+            const venueMatch = body.match(/\*\*Venue:\*\* (.*)/);
+            const descriptionMatch = body.match(/\*\*Description:\*\*\n(.*)/s);
+
+            if (dateMatch && timeMatch) {
+              const eventDateStr = dateMatch[1].trim();
+              const eventTimeStr = timeMatch[1].trim();
+              const eventDateTime = moment(`${eventDateStr} ${eventTimeStr}`, 'YYYY-MM-DD HH:mm');
+
+              // Filter events happening in the next 7 days
+              if (eventDateTime.isBetween(today, nextWeek, null, '[]')) { // [] means inclusive
+                hasUpcomingEvents = true;
+                newsletterContent += `*   **${title}**\n`;
+                newsletterContent += `    *   **Date:** ${eventDateStr}\n`;
+                newsletterContent += `    *   **Time:** ${eventTimeStr}\n`;
+                if (venueMatch) {
+                  newsletterContent += `    *   **Venue:** ${venueMatch[1].trim()}\n`;
+                }
+                if (descriptionMatch) {
+                  const description = descriptionMatch[1].trim().split('\n')[0]; // Take first line of description
+                  newsletterContent += `    *   **Description:** ${description}...\n`;
+                }
+                newsletterContent += `    *   [View Event on GitHub](${issue.html_url})\n\n`;
+              }
+            }
+          }
+
+          if (!hasUpcomingEvents) {
+            newsletterContent += "No events scheduled for the upcoming week. Stay tuned!\n";
+          }
+          
+          core.setOutput('content', newsletterContent);
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Use default GITHUB_TOKEN
+        
     - name: Send Newsletter
       run: |
-        # Placeholder for sending email
-        # In the future, this will use a service like SendGrid
-        echo "Sending newsletter..."
+        echo "Attempting to send newsletter..."
         echo "${{ steps.generate_content.outputs.content }}"
-        echo "Newsletter sent!"
+        
+        # This section requires an external email service like SendGrid, Mailgun, etc.
+        # You will need to install a client for your chosen service (e.g., npm install @sendgrid/mail)
+        # and configure its API key as a repository secret (e.g., SENDGRID_API_KEY).
+        #
+        # Example using SendGrid (replace with your service's logic):
+        #
+        # const sgMail = require('@sendgrid/mail');
+        # sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+        #
+        # const msg = {
+        #   to: 'recipient@example.com', // Change to your recipient
+        #   from: 'sender@example.com', // Change to your verified sender
+        #   subject: 'Seville Events Upcoming Week',
+        #   text: `${{ steps.generate_content.outputs.content }}`, 
+        #   html: `<p>${{ steps.generate_content.outputs.content.replace(/\n/g, '<br>') }}</p>`,
+        # };
+        #
+        # sgMail.send(msg)
+        #   .then(() => console.log('Email sent'))
+        #   .catch((error) => console.error(error));
+        #
+        echo "Newsletter content generated. Sending logic needs to be implemented and configured."
       env:
         SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
