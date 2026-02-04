@@ -19,16 +19,16 @@
   ],
   "functions": {
     "api/auth/google/exchange-code.js": {
-      "includeFiles": ["api/auth.js"]
+      "includeFiles": "api/auth.js"
     },
     "api/events.js": {
-      "includeFiles": ["api/auth.js"]
+      "includeFiles": "api/auth.js"
     },
     "api/venues.js": {
-      "includeFiles": ["api/auth.js"]
+      "includeFiles": "api/auth.js"
     },
     "api/upload-image.js": {
-      "includeFiles": ["api/auth.js"]
+      "includeFiles": "api/auth.js"
     }
   }
 }
