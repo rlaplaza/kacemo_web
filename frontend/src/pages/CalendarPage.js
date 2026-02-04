@@ -9,19 +9,10 @@ const localizer = momentLocalizer(moment);
 
 const CalendarPage = () => {
   const [events, setEvents] = useState([]);
-  const [venues, setVenues] = useState([]); // State to hold venues
   const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
-    const fetchVenues = async () => {
-      try {
-        const response = await axios.get('/api/venues');
-        setVenues(response.data);
-      } catch (error) {
-        console.error("Error fetching venues:", error);
-      }
-    };
-    fetchVenues();
+    // Removed fetchVenues as venues state is no longer used here
 
     const fetchEvents = async () => {
       try {
@@ -31,10 +22,10 @@ const CalendarPage = () => {
           const body = issue.body;
           const title = issue.title;
 
-          const dateMatch = body.match(/\*\*Date:\*\* (.*)/);
-          const timeMatch = body.match(/\*\*Time:\*\* (.*)/);
-          const venueMatch = body.match(/\*\*Venue:\*\* (.*)/);
-          const descriptionMatch = body.match(/\*\*Description:\*\*\n(.*)/s);
+          const dateMatch = body.match(/\*\*Fecha:\*\* (.*)/);
+          const timeMatch = body.match(/\*\*Hora:\*\* (.*)/);
+          const venueMatch = body.match(/\*\*Lugar:\*\* (.*)/);
+          const descriptionMatch = body.match(/\*\*Descripción:\*\*\n(.*)/s);
 
           if (dateMatch && timeMatch) {
             const date = dateMatch[1].trim();
