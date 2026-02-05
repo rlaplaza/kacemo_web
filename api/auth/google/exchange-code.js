@@ -1,8 +1,8 @@
 const { OAuth2Client } = require('google-auth-library');
 const jwt = require('jsonwebtoken');
-const { AUTHORIZED_EMAILS } = require('../../auth'); // Corrected import path (auth.js is now in api/)
+const { handleCorsPreflight } = require('../../cors');
+const { userAuthorized } = require('../../auth');
 
-// Environment Variables (from Vercel)
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -16,16 +16,8 @@ const oAuth2Client = new OAuth2Client(
 );
 
 module.exports = async (req, res) => {
-  // Handle CORS preflight requests
-  if (req.method === 'OPTIONS') {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS'); // This endpoint only expects GET from frontend
-    res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
-    res.status(204).end();
-    return;
-  }
+  handleCorsPreflight(req, res);
 
-  // This endpoint expects a GET request from the frontend
   if (req.method !== 'GET') {
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
@@ -53,10 +45,8 @@ module.exports = async (req, res) => {
     const userEmail = payload['email'];
     const userName = payload['name'];
 
-    // Check if user is authorized
-    if (!AUTHORIZED_EMAILS.includes(userEmail)) {
+    if (!userAuthorized(userEmail)) {
       console.warn('Unauthorized user attempt:', userEmail);
-      // Now, return a JSON error instead of redirecting
       return res.status(403).json({ message: 'Acceso Denegado: Tu correo electrónico no está autorizado para acceder a esta aplicación.' });
     }
 
@@ -68,12 +58,10 @@ module.exports = async (req, res) => {
     );
 
     console.log('Generated App JWT for user:', userEmail);
-    // Return the appToken as a JSON response to the frontend
     res.status(200).json({ token: appToken });
 
   } catch (error) {
     console.error('Error during Google OAuth code exchange:', error);
-    // Now, return a JSON error instead of redirecting
     res.status(500).json({ message: 'Fallo de autenticación durante el intercambio de código.' });
   }
 };
