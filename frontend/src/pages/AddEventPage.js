@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Form, Button, Container, Row, Col, Alert, Spinner } from 'react-bootstrap'; // Import Spinner
+import { Form, Button, Container, Row, Col, Alert, Spinner, Card } from 'react-bootstrap'; // Import Spinner and Card
 import axios from 'axios';
 
 const AddEventPage = () => {

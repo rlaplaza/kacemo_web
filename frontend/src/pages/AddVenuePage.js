@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Button, Container, Row, Col, Alert } from 'react-bootstrap';
+import { Form, Button, Container, Row, Col, Alert, Card } from 'react-bootstrap';
 import axios from 'axios';
 
 const AddVenuePage = () => {
