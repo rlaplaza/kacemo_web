@@ -106,26 +106,26 @@ const EventDetailPage = () => {
                 <Row className="mb-4">
                   <Col sm={6} className="mb-3 mb-sm-0">
                     <div className="detail-item">
-                      <label className="form-label text-uppercase small opacity-75">Fecha</label>
+                      <label className="form-label text-uppercase small">Fecha</label>
                       <div className="h5 mb-0">{event.date}</div>
                     </div>
                   </Col>
                   <Col sm={6}>
                     <div className="detail-item">
-                      <label className="form-label text-uppercase small opacity-75">Hora</label>
+                      <label className="form-label text-uppercase small">Hora</label>
                       <div className="h5 mb-0">{event.time}</div>
                     </div>
                   </Col>
                 </Row>
 
                 <div className="detail-item mb-4">
-                  <label className="form-label text-uppercase small opacity-75">Lugar</label>
+                  <label className="form-label text-uppercase small">Lugar</label>
                   <div className="h5 mb-1">{event.venue}</div>
                   <div className="text-muted small">{venueAddress}</div>
                 </div>
 
                 <div className="detail-item mb-5">
-                  <label className="form-label text-uppercase small opacity-75">Descripción</label>
+                  <label className="form-label text-uppercase small">Descripción</label>
                   <p className="lead mb-0" style={{ whiteSpace: 'pre-wrap' }}>
                     {event.description.replace(/\*\*Póster:\*\* !\[Póster del evento\]\(.*\)/, '').trim()}
                   </p>
@@ -141,7 +141,7 @@ const EventDetailPage = () => {
                   Ver en Google Maps
                 </Button>
                 <Button 
-                  variant="outline-light" 
+                  variant="outline-secondary" 
                   size="lg"
                   href={event.url} 
                   target="_blank" 

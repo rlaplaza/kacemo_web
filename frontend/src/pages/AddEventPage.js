@@ -188,7 +188,7 @@ ${finalImageUrl ? `**Póster:** ![Póster del evento](${finalImageUrl})` : ''}`;
                     label="Visible para todos (si no se marca, solo lo verán usuarios autenticados)"
                     checked={visible}
                     onChange={(e) => setVisible(e.target.checked)}
-                    className="small opacity-75"
+                    className="small"
                   />
                 </Form.Group>
 

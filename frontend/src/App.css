@@ -19,9 +19,9 @@
   flex-direction: column;
 }
 
-/* Navbar (no blue border) */
+/* Navbar */
 .navbar {
-  background-color: rgba(23, 26, 33, 0.86) !important;
+  background-color: var(--navbar-bg) !important;
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--color-border-soft);
   box-shadow: var(--shadow-sm);
@@ -30,7 +30,7 @@
 }
 
 .navbar-brand {
-  color: var(--color-text-light) !important;
+  color: var(--color-text) !important;
   font-family: var(--font-display);
   font-weight: 800;
   letter-spacing: -0.02em;
@@ -38,7 +38,7 @@
 }
 
 .nav-link {
-  color: var(--color-text-light) !important;
+  color: var(--color-text) !important;
   font-family: var(--font-display);
   font-weight: 600;
   letter-spacing: var(--letter-spacing-tight);
@@ -46,21 +46,31 @@
   margin-right: var(--space-2);
 }
 
-/* Hover stays monochrome (no blue) */
+.navbar-toggler {
+  border-color: var(--color-border-strong);
+}
+
+.navbar-toggler-icon {
+  filter: var(--bs-theme-toggler-filter);
+}
+
+[data-bs-theme='dark'] .navbar-toggler-icon {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* Hover stays monochrome */
 .navbar-brand:hover,
 .nav-link:hover {
   opacity: 0.8;
 }
 
 .navbar-text {
-  color: var(--color-neutral-light) !important;
+  color: var(--color-text-muted) !important;
   font-size: 0.95rem;
 }
 
-/* Optional: keep user “online” indicator subtle but colored? 
-   If you want *only calendar* color, set this to muted instead. */
 .navbar-text .text-info {
-  color: var(--color-neutral-light) !important;
+  color: var(--color-text-muted) !important;
 }
 
 /* Layout spacing */
@@ -70,9 +80,9 @@
   padding-bottom: var(--space-7);
 }
 
-/* Headings: monochrome, minimal */
+/* Headings */
 h1, h2, h3, h4, h5, h6 {
-  color: var(--color-text-light);
+  color: var(--color-text);
   font-family: var(--font-display);
   font-weight: 800;
   letter-spacing: -0.025em;
@@ -95,13 +105,10 @@ h3 { font-size: 1.5rem; }
 
 .form-control,
 .form-select {
-  background-color: rgba(23, 26, 33, 0.75);
-  color: var(--color-text-light);
-
-  /* Visible boundaries (important for non-text contrast) */
+  background-color: var(--color-surface-1);
+  color: var(--color-text);
   border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-sm);
-
   padding: 0.65rem 1rem;
   font-size: 1rem;
   box-shadow: none;
@@ -113,13 +120,13 @@ h3 { font-size: 1.5rem; }
 
 .form-control:focus,
 .form-select:focus {
-  background-color: rgba(23, 26, 33, 0.92);
-  color: var(--color-text-light);
-  border-color: rgba(255,255,255,.35);
+  background-color: var(--color-surface-2);
+  color: var(--color-text);
+  border-color: var(--color-text-faint);
   box-shadow: var(--focus-ring);
 }
 
-/* Buttons: neutral styling (no blue) */
+/* Buttons */
 .btn {
   border-radius: var(--radius-sm);
   font-family: var(--font-display);
@@ -129,55 +136,63 @@ h3 { font-size: 1.5rem; }
   transition: all 140ms ease;
 }
 
-.btn:active {
-  transform: translateY(1px);
-}
-
 .btn-primary {
-  background-color: #ECEEF3;
-  border-color: #ECEEF3;
-  color: #0F1115;
+  background-color: var(--color-text);
+  border-color: var(--color-text);
+  color: var(--color-bg);
 }
 
 .btn-primary:hover {
-  background-color: #D9DBE0;
-  border-color: #D9DBE0;
-  color: #0F1115;
+  opacity: 0.9;
+  background-color: var(--color-text);
+  border-color: var(--color-text);
+  color: var(--color-bg);
 }
 
-.btn-outline-light {
-  color: var(--color-text-light);
-  border-color: var(--color-border-strong);
-  background-color: transparent;
-}
-
-.btn-outline-light:hover {
-  background-color: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.40);
-  color: var(--color-text-light);
-}
-
-/* Alerts: if you want *only calendar* color, make these neutral too */
+/* Alerts */
 .alert {
   border-radius: var(--radius-md);
   padding: var(--space-4) var(--space-5);
   border: 1px solid transparent;
 }
 
-.alert-success {
+[data-bs-theme='dark'] .alert-success {
   background-color: rgba(39, 174, 96, 0.1);
   color: #58D68D;
   border-color: rgba(39, 174, 96, 0.25);
 }
-.alert-danger {
+[data-bs-theme='dark'] .alert-danger {
   background-color: rgba(235, 87, 87, 0.1);
   color: #F1948A;
   border-color: rgba(235, 87, 87, 0.25);
 }
 
+[data-bs-theme='light'] .alert-success {
+  background-color: #D4EDDA;
+  color: #155724;
+  border-color: #C3E6CB;
+}
+[data-bs-theme='light'] .alert-danger {
+  background-color: #F8D7DA;
+  color: #721C24;
+  border-color: #F5C6CB;
+}
+
+.btn-outline-light, .btn-outline-secondary {
+  color: var(--color-text);
+  border-color: var(--color-border-strong);
+  background-color: transparent;
+}
+
+.btn-outline-light:hover, .btn-outline-secondary:hover {
+  background-color: var(--color-border-soft);
+  border-color: var(--color-text-faint);
+  color: var(--color-text);
+}
+
 /* Cards */
 .card {
-  background-color: rgba(23, 26, 33, 0.6) !important;
+  background-color: var(--card-bg) !important;
   backdrop-filter: blur(8px);
   border: 1px solid var(--color-border-soft) !important;
   border-radius: var(--radius-md);
@@ -186,21 +201,50 @@ h3 { font-size: 1.5rem; }
 }
 
 .card-header {
-  background-color: rgba(31, 35, 48, 0.4) !important;
+  background-color: var(--header-bg) !important;
   border-bottom: 1px solid var(--color-border-soft) !important;
   padding: var(--space-4) var(--space-5) !important;
 }
 
-.card-body {
-  padding: var(--space-5) !important;
+/* Theme Toggle Button */
+.theme-toggle {
+  background: transparent;
+  border: 1px solid var(--color-border-strong);
+  color: var(--color-text);
+  border-radius: var(--radius-sm);
+  padding: 0.4rem 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.theme-toggle:hover {
+  background-color: var(--color-border-soft);
+}
+
+/* Event Detail Specific Fixes */
+.lead {
+  color: var(--color-text);
+  font-weight: 400;
+  line-height: 1.7;
+}
+
+[data-bs-theme='dark'] .lead {
+  color: #ECEEF3; /* High contrast white-ish */
+}
+
+[data-bs-theme='light'] .lead {
+  color: #1A1D23; /* High contrast dark */
 }
 
 /* React Big Calendar overrides */
 .rbc-calendar {
-  background-color: rgba(23, 26, 33, 0.6);
+  background-color: var(--card-bg);
   backdrop-filter: blur(8px);
   border: 1px solid var(--color-border-soft);
-  color: var(--color-text-light);
+  color: var(--color-text);
   font-family: var(--font-sans);
   border-radius: var(--radius-md);
   overflow: hidden;
@@ -208,15 +252,16 @@ h3 { font-size: 1.5rem; }
 }
 
 .rbc-header {
-  background-color: rgba(31, 35, 48, 0.55);
-  color: var(--color-text-light);
+  background-color: var(--header-bg);
+  color: var(--color-text);
   font-weight: 700;
   border-bottom: 1px solid var(--color-border-soft);
   padding: var(--space-3) 0;
 }
 
 .rbc-off-range-bg {
-  background-color: rgba(15, 17, 21, 0.92);
+  background-color: var(--color-surface-1);
+  opacity: 0.5;
 }
 
 .rbc-date-cell {
@@ -224,52 +269,38 @@ h3 { font-size: 1.5rem; }
 }
 
 .rbc-button-link {
-  color: var(--color-text-light);
+  color: var(--color-text);
 }
 
-/* Toolbar controls keep neutral borders */
 .rbc-toolbar button {
-  color: var(--color-text-light);
-  background-color: rgba(23, 26, 33, 0.55);
+  color: var(--color-text);
+  background-color: var(--color-surface-1);
   border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-sm);
 }
 .rbc-toolbar button:hover {
-  background-color: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.30);
+  background-color: var(--color-border-soft);
 }
 
-/* ✅ Color used ONLY for highlights */
 .rbc-today {
-  /* Today highlight (accent color) */
-  background-color: rgba(47, 128, 237, 0.08);
-  border: 1px solid rgba(47, 128, 237, 0.38);
-  border-radius: var(--radius-sm);
+  background-color: var(--color-border-soft);
+  border: 1px solid var(--color-highlight);
 }
 
-/* Current time indicator stays a clear highlight */
 .rbc-current-time-indicator {
-  background-color: var(--color-highlight-red);
+  background-color: var(--color-now);
 }
 
-/* Events are green highlight */
 .rbc-event {
-  background-color: rgba(39, 174, 96, 0.88);
-  border: 1px solid rgba(39, 174, 96, 0.88);
-  color: #0B0F14;
+  background-color: var(--color-event);
+  color: #FFFFFF !important;
   font-weight: 700;
   border-radius: var(--radius-sm);
-  opacity: 0.96;
 }
-.rbc-event:hover { opacity: 1; }
-.rbc-event-content { color: #0B0F14; }
+.rbc-event-content { color: #FFFFFF !important; }
 
 .rbc-month-view .rbc-day-bg + .rbc-day-bg,
 .rbc-time-view .rbc-day-bg + .rbc-day-bg,
 .rbc-time-header.rbc-overflowing {
   border-left: 1px solid var(--color-border-soft);
-}
-
-.rbc-row-segment .rbc-event-content {
-  white-space: normal;
 }

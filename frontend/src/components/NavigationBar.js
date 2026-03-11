@@ -2,9 +2,11 @@ import React from 'react';
 import { Navbar, Nav, Container, Button } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { useAuth } from '../AuthContext';
+import { useTheme } from '../ThemeContext';
 
 const NavigationBar = () => {
   const { user, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
 
   const handleLogin = () => {
     // Redirect to backend serverless function to initiate Google OAuth
@@ -36,16 +38,23 @@ const NavigationBar = () => {
               </>
             )}
           </Nav>
-          <Nav>
+          <Nav className="align-items-center gap-2">
+            <button 
+              className="theme-toggle me-2" 
+              onClick={toggleTheme}
+              title={`Cambiar a modo ${theme === 'light' ? 'oscuro' : 'claro'}`}
+            >
+              {theme === 'light' ? '🌙' : '☀️'}
+            </button>
             {user ? (
               <>
-                <Navbar.Text className="me-3">
+                <Navbar.Text className="me-3 d-none d-sm-block">
                   Sesión iniciada como: <span className="text-info">{user.name}</span>
                 </Navbar.Text>
-                <Button variant="outline-light" onClick={logout}>Cerrar Sesión</Button>
+                <Button variant="outline-secondary" onClick={logout}>Cerrar Sesión</Button>
               </>
             ) : (
-              <Button variant="outline-light" onClick={handleLogin}>Iniciar Sesión con Google</Button>
+              <Button variant="outline-secondary" onClick={handleLogin}>Iniciar Sesión</Button>
             )}
           </Nav>
         </Navbar.Collapse>
