@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Form, Button, Container, Row, Col, Alert, Spinner, Card } from 'react-bootstrap'; // Import Spinner and Card
 import axios from 'axios';
+import { compressImage } from '../utils/image-compression';
 
 const AddEventPage = () => {
   const [title, setTitle] = useState('');
@@ -47,10 +48,13 @@ const AddEventPage = () => {
     let finalImageUrl = '';
 
     if (imageFile) {
-      const formData = new FormData();
-      formData.append('image', imageFile);
-
       try {
+        // Compress the image before uploading to keep it around 250KB
+        const compressedFile = await compressImage(imageFile);
+        
+        const formData = new FormData();
+        formData.append('image', compressedFile);
+
         const uploadResponse = await axios.post('/api/upload-image', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
@@ -58,18 +62,17 @@ const AddEventPage = () => {
         });
         finalImageUrl = uploadResponse.data.url;
         setImageUrl(finalImageUrl); // Store URL for display/confirmation
-        setUploadingImage(false); // Image upload finished
       } catch (uploadError) {
-        console.error("Error uploading image:", uploadError.response ? uploadError.response.data : uploadError.message);
+        console.error("Error processing/uploading image:", uploadError.response ? uploadError.response.data : uploadError.message);
         setAlertVariant('danger');
-        setAlertMessage('Error al subir la imagen. Por favor, inténtalo de nuevo.');
+        setAlertMessage('Error al procesar o subir la imagen. Por favor, inténtalo de nuevo.');
         setShowAlert(true);
         setUploadingImage(false);
         return; // Stop further submission if image upload fails
       }
-    } else {
-      setUploadingImage(false); // No image to upload
     }
+    
+    setUploadingImage(false); // Image processing/upload finished
 
     // Construct issue body with image URL and visibility if available
     const issueBody = `**Fecha:** ${date}
