@@ -1,4 +1,4 @@
-const { authorizeApiCall } = require('./auth');
+const { authorizeApiCall, isAuthorized } = require('./auth');
 const { pushIssue, getIssues } = require('./storage/github-store');
 const { handleCorsPreflight } = require('./cors');
 
@@ -8,7 +8,22 @@ module.exports = async (req, res) => {
   try {
     if (req.method === 'GET') {
       let issues = await getIssues();
-      res.status(200).json(issues.unpack());
+      let unpackedIssues = issues.unpack();
+
+      if (!isAuthorized(req)) {
+        // Filter events that are marked as invisible.
+        // For backward compatibility, assume visible if not specified.
+        unpackedIssues = unpackedIssues.filter(issue => {
+          if (!issue.body) return true;
+          const visibleMatch = issue.body.match(/\*\*Visible:\*\* (.*)/);
+          if (visibleMatch) {
+            return visibleMatch[1].trim().toLowerCase() === 'true';
+          }
+          return true; // Default to true if not specified
+        });
+      }
+
+      res.status(200).json(unpackedIssues);
     } else if (req.method === 'POST') {
       if(!authorizeApiCall(req, res)) { return; }
       

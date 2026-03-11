@@ -20,17 +20,19 @@ const EventDetailPage = () => {
         const foundIssue = allIssues.find(issue => issue.number.toString() === eventId);
 
         if (foundIssue) {
-          const body = foundIssue.body;
+          const body = foundIssue.body || '';
           const title = foundIssue.title;
 
           const dateMatch = body.match(/\*\*Fecha:\*\* (.*)/);
           const timeMatch = body.match(/\*\*Hora:\*\* (.*)/);
           const venueMatch = body.match(/\*\*Lugar:\*\* (.*)/);
+          const visibleMatch = body.match(/\*\*Visible:\*\* (.*)/);
           const descriptionMatch = body.match(/\*\*Descripción:\*\*\n(.*)/s);
           const posterMatch = body.match(/\*\*Póster:\*\* !\[Póster del evento\]\((.*)\)/); // Extract image URL
 
+          const isVisible = visibleMatch ? visibleMatch[1].trim().toLowerCase() === 'true' : true;
           const eventDetails = {
-            title: title,
+            title: isVisible ? title : `[Privado] ${title}`,
             date: dateMatch ? dateMatch[1].trim() : 'N/A',
             time: timeMatch ? timeMatch[1].trim() : 'N/A',
             venue: venueMatch ? venueMatch[1].trim() : 'N/A',

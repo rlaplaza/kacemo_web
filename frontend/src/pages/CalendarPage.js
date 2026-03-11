@@ -19,27 +19,30 @@ const CalendarPage = () => {
         const response = await axios.get('/api/events');
 
         const parsedEvents = response.data.map(issue => {
-          const body = issue.body;
+          const body = issue.body || '';
           const title = issue.title;
 
           const dateMatch = body.match(/\*\*Fecha:\*\* (.*)/);
           const timeMatch = body.match(/\*\*Hora:\*\* (.*)/);
           const venueMatch = body.match(/\*\*Lugar:\*\* (.*)/);
+          const visibleMatch = body.match(/\*\*Visible:\*\* (.*)/);
           const descriptionMatch = body.match(/\*\*Descripción:\*\*\n(.*)/s);
 
           if (dateMatch && timeMatch) {
             const date = dateMatch[1].trim();
             const time = timeMatch[1].trim();
             const start = moment(`${date} ${time}`, 'YYYY-MM-DD HH:mm').toDate();
+            const isVisible = visibleMatch ? visibleMatch[1].trim().toLowerCase() === 'true' : true;
 
             return {
-              title: title,
+              title: isVisible ? title : `[Privado] ${title}`,
               start: start,
               end: start, // Assuming events are for a single moment
               allDay: false,
               resource: {
                 venue: venueMatch ? venueMatch[1].trim() : '',
                 description: descriptionMatch ? descriptionMatch[1].trim() : '',
+                visible: isVisible,
                 url: issue.html_url
               },
               id: issue.number // Add issue number as id for routing

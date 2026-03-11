@@ -8,6 +8,7 @@ const AddEventPage = () => {
   const [time, setTime] = useState('');
   const [venue, setVenue] = useState('');
   const [description, setDescription] = useState('');
+  const [visible, setVisible] = useState(true);
   const [imageFile, setImageFile] = useState(null); // New state for image file
   const [imageUrl, setImageUrl] = useState(''); // New state for uploaded image URL
   const [uploadingImage, setUploadingImage] = useState(false); // New state for upload status
@@ -68,10 +69,11 @@ const AddEventPage = () => {
       setUploadingImage(false); // No image to upload
     }
 
-    // Construct issue body with image URL if available
+    // Construct issue body with image URL and visibility if available
     const issueBody = `**Fecha:** ${date}
 **Hora:** ${time}
 **Lugar:** ${venue}
+**Visible:** ${visible}
 **Descripción:**
 ${description}
 ${finalImageUrl ? `**Póster:** ![Póster del evento](${finalImageUrl})` : ''}`; // Add image if URL exists
@@ -92,6 +94,7 @@ ${finalImageUrl ? `**Póster:** ![Póster del evento](${finalImageUrl})` : ''}`;
         setTime('');
         setVenue('');
         setDescription('');
+        setVisible(true);
         setImageFile(null);
         setImageUrl('');
       }
@@ -153,6 +156,15 @@ ${finalImageUrl ? `**Póster:** ![Póster del evento](${finalImageUrl})` : ''}`;
                   <option key={index} value={v.name}>{v.name}</option>
                 ))}
               </Form.Select>
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="formEventVisible">
+              <Form.Check 
+                type="checkbox"
+                label="Visible para todos (si no se marca, solo lo verán usuarios autenticados)"
+                checked={visible}
+                onChange={(e) => setVisible(e.target.checked)}
+              />
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formEventDescription">

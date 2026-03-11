@@ -11,9 +11,16 @@ const userAuthorized = (email) => {
 }
 
 const authorizeApiCall = (req, res) => {
+  if (!isAuthorized(req)) {
+    res.status(401).json({ message: 'Autenticación requerida o acceso denegado.' });
+    return false;
+  }
+  return true;
+};
+
+const isAuthorized = (req) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    res.status(401).json({ message: 'Autenticación requerida: Token Bearer faltante.' });
     return false;
   }
   const token = authHeader.split(' ')[1];
@@ -22,17 +29,12 @@ const authorizeApiCall = (req, res) => {
   try {
     decoded = jwt.verify(token, JWT_SECRET);
   } catch (err) {
-    res.status(401).json({ message: 'Token inválido o expirado.' });
     return false;
   }
 
-  if (!userAuthorized(decoded.email)) {
-    res.status(403).json({ message: `Acceso Denegado: Tu correo electrónico (${decoded.email}) no está autorizado para crear eventos.` });
-    return false;
-  }
-  return true;
+  return userAuthorized(decoded.email);
 };
 
 module.exports = {
-  authorizeApiCall, userAuthorized
+  authorizeApiCall, isAuthorized, userAuthorized
 };
