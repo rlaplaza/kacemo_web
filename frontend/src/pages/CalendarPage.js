@@ -22,17 +22,17 @@ const CalendarPage = () => {
           const body = issue.body || '';
           const title = issue.title;
 
-          const dateMatch = body.match(/\*\*Fecha:\*\* (.*)/);
-          const timeMatch = body.match(/\*\*Hora:\*\* (.*)/);
-          const venueMatch = body.match(/\*\*Lugar:\*\* (.*)/);
-          const visibleMatch = body.match(/\*\*Visible:\*\* (.*)/);
+          const dateMatch = body.match(/^(\*\*Fecha:\*\*|Fecha:) (.*)/m);
+          const timeMatch = body.match(/^(\*\*Hora:\*\*|Hora:) (.*)/m);
+          const venueMatch = body.match(/^(\*\*Lugar:\*\*|Lugar:) (.*)/m);
+          const visibleMatch = body.match(/^(\*\*Visible:\*\*|Visible:) (.*)/m);
           const descriptionMatch = body.match(/\*\*Descripción:\*\*\n(.*)/s);
 
           if (dateMatch && timeMatch) {
-            const date = dateMatch[1].trim();
-            const time = timeMatch[1].trim();
+            const date = dateMatch[2].trim();
+            const time = timeMatch[2].trim();
             const start = moment(`${date} ${time}`, 'YYYY-MM-DD HH:mm').toDate();
-            const isVisible = visibleMatch ? visibleMatch[1].trim().toLowerCase() === 'true' : true;
+            const isVisible = visibleMatch ? visibleMatch[2].trim().toLowerCase() === 'true' : true;
 
             return {
               title: isVisible ? title : `[Privado] ${title}`,
@@ -40,7 +40,7 @@ const CalendarPage = () => {
               end: start, // Assuming events are for a single moment
               allDay: false,
               resource: {
-                venue: venueMatch ? venueMatch[1].trim() : '',
+                venue: venueMatch ? venueMatch[2].trim() : '',
                 description: descriptionMatch ? descriptionMatch[1].trim() : '',
                 visible: isVisible,
                 url: issue.html_url

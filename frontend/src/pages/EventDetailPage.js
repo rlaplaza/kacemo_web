@@ -23,19 +23,19 @@ const EventDetailPage = () => {
           const body = foundIssue.body || '';
           const title = foundIssue.title;
 
-          const dateMatch = body.match(/\*\*Fecha:\*\* (.*)/);
-          const timeMatch = body.match(/\*\*Hora:\*\* (.*)/);
-          const venueMatch = body.match(/\*\*Lugar:\*\* (.*)/);
-          const visibleMatch = body.match(/\*\*Visible:\*\* (.*)/);
+          const dateMatch = body.match(/^(\*\*Fecha:\*\*|Fecha:) (.*)/m);
+          const timeMatch = body.match(/^(\*\*Hora:\*\*|Hora:) (.*)/m);
+          const venueMatch = body.match(/^(\*\*Lugar:\*\*|Lugar:) (.*)/m);
+          const visibleMatch = body.match(/^(\*\*Visible:\*\*|Visible:) (.*)/m);
           const descriptionMatch = body.match(/\*\*Descripción:\*\*\n(.*)/s);
           const posterMatch = body.match(/\*\*Póster:\*\* !\[Póster del evento\]\((.*)\)/); // Extract image URL
 
-          const isVisible = visibleMatch ? visibleMatch[1].trim().toLowerCase() === 'true' : true;
+          const isVisible = visibleMatch ? visibleMatch[2].trim().toLowerCase() === 'true' : true;
           const eventDetails = {
             title: isVisible ? title : `[Privado] ${title}`,
-            date: dateMatch ? dateMatch[1].trim() : 'N/A',
-            time: timeMatch ? timeMatch[1].trim() : 'N/A',
-            venue: venueMatch ? venueMatch[1].trim() : 'N/A',
+            date: dateMatch ? dateMatch[2].trim() : 'N/A',
+            time: timeMatch ? timeMatch[2].trim() : 'N/A',
+            venue: venueMatch ? venueMatch[2].trim() : 'N/A',
             description: descriptionMatch ? descriptionMatch[1].trim() : 'N/A',
             imageUrl: posterMatch ? posterMatch[1].trim() : '', // Store image URL
             url: foundIssue.html_url

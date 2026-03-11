@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Form, Button, Container, Row, Col, Alert, Spinner } from 'react-bootstrap'; // Import Spinner
 import axios from 'axios';
 
@@ -16,6 +16,8 @@ const AddEventPage = () => {
   const [alertMessage, setAlertMessage] = useState('');
   const [alertVariant, setAlertVariant] = useState('success');
   const [venues, setVenues] = useState([]);
+  
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     const fetchVenues = async () => {
@@ -97,6 +99,9 @@ ${finalImageUrl ? `**Póster:** ![Póster del evento](${finalImageUrl})` : ''}`;
         setVisible(true);
         setImageFile(null);
         setImageUrl('');
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
       }
     } catch (error) {
       setAlertVariant('danger');
@@ -185,6 +190,7 @@ ${finalImageUrl ? `**Póster:** ![Póster del evento](${finalImageUrl})` : ''}`;
                 type="file" 
                 accept="image/*" 
                 onChange={handleFileChange} 
+                ref={fileInputRef}
               />
               {uploadingImage && <Spinner animation="border" size="sm" className="ms-2" />}
               {imageUrl && <p className="text-success mt-2">Imagen subida: <a href={imageUrl} target="_blank" rel="noopener noreferrer">{imageUrl}</a></p>}

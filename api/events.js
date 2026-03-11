@@ -15,9 +15,10 @@ module.exports = async (req, res) => {
         // For backward compatibility, assume visible if not specified.
         unpackedIssues = unpackedIssues.filter(issue => {
           if (!issue.body) return true;
-          const visibleMatch = issue.body.match(/\*\*Visible:\*\* (.*)/);
+          // Match visibility only if it's at the beginning of a line to avoid false positives
+          const visibleMatch = issue.body.match(/^(\*\*Visible:\*\*|Visible:) (.*)/m);
           if (visibleMatch) {
-            return visibleMatch[1].trim().toLowerCase() === 'true';
+            return visibleMatch[2].trim().toLowerCase() === 'true';
           }
           return true; // Default to true if not specified
         });

@@ -11,8 +11,23 @@ const userAuthorized = (email) => {
 }
 
 const authorizeApiCall = (req, res) => {
-  if (!isAuthorized(req)) {
-    res.status(401).json({ message: 'Autenticación requerida o acceso denegado.' });
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    res.status(401).json({ message: 'Autenticación requerida: Token Bearer faltante.' });
+    return false;
+  }
+  const token = authHeader.split(' ')[1];
+
+  let decoded;
+  try {
+    decoded = jwt.verify(token, JWT_SECRET);
+  } catch (err) {
+    res.status(401).json({ message: 'Token inválido o expirado.' });
+    return false;
+  }
+
+  if (!userAuthorized(decoded.email)) {
+    res.status(403).json({ message: `Acceso Denegado: Tu correo electrónico (${decoded.email}) no está autorizado.` });
     return false;
   }
   return true;
@@ -25,14 +40,12 @@ const isAuthorized = (req) => {
   }
   const token = authHeader.split(' ')[1];
 
-  let decoded;
   try {
-    decoded = jwt.verify(token, JWT_SECRET);
+    const decoded = jwt.verify(token, JWT_SECRET);
+    return userAuthorized(decoded.email);
   } catch (err) {
     return false;
   }
-
-  return userAuthorized(decoded.email);
 };
 
 module.exports = {
