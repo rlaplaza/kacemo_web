@@ -37,38 +37,56 @@ const AddVenuePage = () => {
   };
 
   return (
-    <Container>
-      <Row className="justify-content-md-center">
-        <Col md={6}>
-          <h1>Añadir Nuevo Lugar</h1>
-          {showAlert && <Alert variant={alertVariant} onClose={() => setShowAlert(false)} dismissible>{alertMessage}</Alert>}
-          <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3" controlId="formVenueName">
-              <Form.Label>Nombre del Lugar</Form.Label>
-              <Form.Control 
-                type="text" 
-                placeholder="Introduce el nombre del lugar" 
-                value={name} 
-                onChange={(e) => setName(e.target.value)} 
-                required
-              />
-            </Form.Group>
+    <Container className="py-4">
+      <Row className="justify-content-center">
+        <Col lg={8} xl={6}>
+          <Card className="border-0 shadow-lg">
+            <Card.Header className="py-4 text-center">
+              <h1 className="h2 mb-0">Añadir Nuevo Lugar</h1>
+            </Card.Header>
+            <Card.Body className="p-4 p-md-5">
+              {showAlert && (
+                <Alert 
+                  variant={alertVariant} 
+                  onClose={() => setShowAlert(false)} 
+                  dismissible 
+                  className="mb-4"
+                >
+                  {alertMessage}
+                </Alert>
+              )}
+              
+              <Form onSubmit={handleSubmit}>
+                <Form.Group className="mb-4" controlId="formVenueName">
+                  <Form.Label>Nombre del Lugar</Form.Label>
+                  <Form.Control 
+                    type="text" 
+                    placeholder="Ej: Teatro Principal" 
+                    value={name} 
+                    onChange={(e) => setName(e.target.value)} 
+                    required
+                  />
+                </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formVenueAddress">
-              <Form.Label>Dirección</Form.Label>
-              <Form.Control 
-                type="text" 
-                placeholder="Introduce la dirección del lugar" 
-                value={address} 
-                onChange={(e) => setAddress(e.target.value)} 
-                required
-              />
-            </Form.Group>
+                <Form.Group className="mb-5" controlId="formVenueAddress">
+                  <Form.Label>Dirección</Form.Label>
+                  <Form.Control 
+                    type="text" 
+                    placeholder="Calle, Número, Ciudad..." 
+                    value={address} 
+                    onChange={(e) => setAddress(e.target.value)} 
+                    required
+                  />
+                </Form.Group>
 
-            <Button variant="primary" type="submit">
-              Enviar
-            </Button>
-          </Form>
+                <div className="d-grid">
+                  <Button variant="primary" type="submit" size="lg">
+                    Añadir Lugar
+                  </Button>
+                </div>
+              </Form>
+            </Card.Body>
+          </Card>
         </Col>
       </Row>
     </Container>

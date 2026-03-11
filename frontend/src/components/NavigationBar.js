@@ -14,10 +14,10 @@ const NavigationBar = () => {
   };
 
   return (
-    <Navbar bg="dark" variant="dark" expand="lg">
+    <Navbar expand="lg" className="navbar">
       <Container>
         <LinkContainer to="/">
-          <Navbar.Brand>KACEMOS HOY COMPAE</Navbar.Brand>
+          <Navbar.Brand className="navbar-brand">KACEMOS HOY</Navbar.Brand>
         </LinkContainer>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">

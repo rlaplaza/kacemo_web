@@ -22,27 +22,39 @@
 /* Navbar (no blue border) */
 .navbar {
   background-color: rgba(23, 26, 33, 0.86) !important;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--color-border-soft);
   box-shadow: var(--shadow-sm);
+  padding-top: var(--space-3);
+  padding-bottom: var(--space-3);
 }
 
-.navbar-brand,
+.navbar-brand {
+  color: var(--color-text-light) !important;
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  font-size: 1.4rem;
+}
+
 .nav-link {
   color: var(--color-text-light) !important;
   font-family: var(--font-display);
-  font-weight: 700;
-  letter-spacing: 0.2px;
+  font-weight: 600;
+  letter-spacing: var(--letter-spacing-tight);
+  margin-left: var(--space-2);
+  margin-right: var(--space-2);
 }
 
 /* Hover stays monochrome (no blue) */
 .navbar-brand:hover,
 .nav-link:hover {
-  opacity: 0.92;
+  opacity: 0.8;
 }
 
 .navbar-text {
   color: var(--color-neutral-light) !important;
+  font-size: 0.95rem;
 }
 
 /* Optional: keep user “online” indicator subtle but colored? 
@@ -62,16 +74,23 @@
 h1, h2, h3, h4, h5, h6 {
   color: var(--color-text-light);
   font-family: var(--font-display);
-  font-weight: 700;
-  letter-spacing: 0.2px;
-  margin: 0 0 var(--space-5);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  margin-top: 0;
+  margin-bottom: var(--space-5);
 }
+
+h1 { font-size: 2.25rem; }
+h2 { font-size: 1.85rem; }
+h3 { font-size: 1.5rem; }
 
 /* Forms */
 .form-label {
   color: var(--color-text-muted);
   font-weight: 600;
   margin-bottom: var(--space-2);
+  font-size: 0.9rem;
+  letter-spacing: 0.01em;
 }
 
 .form-control,
@@ -83,7 +102,8 @@ h1, h2, h3, h4, h5, h6 {
   border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-sm);
 
-  padding: 0.6rem 0.75rem;
+  padding: 0.65rem 1rem;
+  font-size: 1rem;
   box-shadow: none;
 }
 
@@ -102,25 +122,27 @@ h1, h2, h3, h4, h5, h6 {
 /* Buttons: neutral styling (no blue) */
 .btn {
   border-radius: var(--radius-sm);
-  transition: background-color 140ms ease, color 140ms ease, border-color 140ms ease, transform 80ms ease;
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: var(--letter-spacing-tight);
+  padding: 0.6rem 1.25rem;
+  transition: all 140ms ease;
 }
 
 .btn:active {
-  transform: translateY(0.5px);
+  transform: translateY(1px);
 }
 
 .btn-primary {
-  background-color: rgba(236, 238, 243, 0.92);
-  border-color: rgba(236, 238, 243, 0.92);
-  color: #0C0D10;
-  font-weight: 700;
-  letter-spacing: 0.2px;
+  background-color: #ECEEF3;
+  border-color: #ECEEF3;
+  color: #0F1115;
 }
 
 .btn-primary:hover {
-  background-color: rgba(236, 238, 243, 0.82);
-  border-color: rgba(236, 238, 243, 0.82);
-  color: #0C0D10;
+  background-color: #D9DBE0;
+  border-color: #D9DBE0;
+  color: #0F1115;
 }
 
 .btn-outline-light {
@@ -130,47 +152,59 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-outline-light:hover {
-  background-color: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.30);
+  background-color: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.40);
   color: var(--color-text-light);
 }
 
 /* Alerts: if you want *only calendar* color, make these neutral too */
+.alert {
+  border-radius: var(--radius-md);
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid transparent;
+}
+
 .alert-success {
-  background-color: rgba(39, 174, 96, 0.14);
-  color: var(--color-text-light);
-  border: 1px solid rgba(39, 174, 96, 0.35);
+  background-color: rgba(39, 174, 96, 0.1);
+  color: #58D68D;
+  border-color: rgba(39, 174, 96, 0.25);
 }
 .alert-danger {
-  background-color: rgba(235, 87, 87, 0.14);
-  color: var(--color-text-light);
-  border: 1px solid rgba(235, 87, 87, 0.35);
+  background-color: rgba(235, 87, 87, 0.1);
+  color: #F1948A;
+  border-color: rgba(235, 87, 87, 0.25);
 }
 
 /* Cards */
 .card {
-  background-color: rgba(23, 26, 33, 0.72) !important;
+  background-color: rgba(23, 26, 33, 0.6) !important;
+  backdrop-filter: blur(8px);
   border: 1px solid var(--color-border-soft) !important;
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
   overflow: hidden;
 }
 
 .card-header {
-  background-color: rgba(31, 35, 48, 0.62) !important;
+  background-color: rgba(31, 35, 48, 0.4) !important;
   border-bottom: 1px solid var(--color-border-soft) !important;
-  font-weight: 600;
+  padding: var(--space-4) var(--space-5) !important;
+}
+
+.card-body {
+  padding: var(--space-5) !important;
 }
 
 /* React Big Calendar overrides */
 .rbc-calendar {
-  background-color: rgba(23, 26, 33, 0.72);
+  background-color: rgba(23, 26, 33, 0.6);
+  backdrop-filter: blur(8px);
   border: 1px solid var(--color-border-soft);
   color: var(--color-text-light);
   font-family: var(--font-sans);
   border-radius: var(--radius-md);
   overflow: hidden;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
 }
 
 .rbc-header {
@@ -210,7 +244,7 @@ h1, h2, h3, h4, h5, h6 {
   /* Today highlight (accent color) */
   background-color: rgba(47, 128, 237, 0.08);
   border: 1px solid rgba(47, 128, 237, 0.38);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
 }
 
 /* Current time indicator stays a clear highlight */
@@ -224,7 +258,7 @@ h1, h2, h3, h4, h5, h6 {
   border: 1px solid rgba(39, 174, 96, 0.88);
   color: #0B0F14;
   font-weight: 700;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   opacity: 0.96;
 }
 .rbc-event:hover { opacity: 1; }

@@ -65,15 +65,25 @@ const CalendarPage = () => {
   };
 
   return (
-    <div>
-      <h1>Calendario de Eventos</h1>
-      <div style={{ height: '70vh' }}>
+    <div className="pb-5">
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h1 className="mb-0">Calendario de Eventos</h1>
+      </div>
+      <div style={{ height: '75vh', minHeight: '500px' }}>
         <Calendar
           localizer={localizer}
           events={events}
           startAccessor="start"
           endAccessor="end"
           onSelectEvent={handleSelectEvent}
+          messages={{
+            next: "Sig.",
+            previous: "Ant.",
+            today: "Hoy",
+            month: "Mes",
+            week: "Semana",
+            day: "Día"
+          }}
         />
       </div>
     </div>

@@ -112,94 +112,128 @@ ${finalImageUrl ? `**Póster:** ![Póster del evento](${finalImageUrl})` : ''}`;
   };
 
   return (
-    <Container>
-      <Row className="justify-content-md-center">
-        <Col md={6}>
-          <h1>Añadir Nuevo Evento</h1>
-          {showAlert && <Alert variant={alertVariant} onClose={() => setShowAlert(false)} dismissible>{alertMessage}</Alert>}
-          <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3" controlId="formEventTitle">
-              <Form.Label>Título del Evento</Form.Label>
-              <Form.Control 
-                type="text" 
-                placeholder="Introduce el título del evento" 
-                value={title} 
-                onChange={(e) => setTitle(e.target.value)} 
-                required
-              />
-            </Form.Group>
+    <Container className="py-4">
+      <Row className="justify-content-center">
+        <Col lg={8} xl={6}>
+          <Card className="border-0 shadow-lg">
+            <Card.Header className="py-4 text-center">
+              <h1 className="h2 mb-0">Añadir Nuevo Evento</h1>
+            </Card.Header>
+            <Card.Body className="p-4 p-md-5">
+              {showAlert && (
+                <Alert 
+                  variant={alertVariant} 
+                  onClose={() => setShowAlert(false)} 
+                  dismissible 
+                  className="mb-4"
+                >
+                  {alertMessage}
+                </Alert>
+              )}
+              
+              <Form onSubmit={handleSubmit}>
+                <Form.Group className="mb-4" controlId="formEventTitle">
+                  <Form.Label>Título del Evento</Form.Label>
+                  <Form.Control 
+                    type="text" 
+                    placeholder="Ej: Concierto de Jazz" 
+                    value={title} 
+                    onChange={(e) => setTitle(e.target.value)} 
+                    required
+                  />
+                </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formEventDate">
-              <Form.Label>Fecha</Form.Label>
-              <Form.Control 
-                type="date" 
-                value={date} 
-                onChange={(e) => setDate(e.target.value)} 
-                required
-              />
-            </Form.Group>
+                <Row className="mb-4">
+                  <Col md={6} className="mb-4 mb-md-0">
+                    <Form.Group controlId="formEventDate">
+                      <Form.Label>Fecha</Form.Label>
+                      <Form.Control 
+                        type="date" 
+                        value={date} 
+                        onChange={(e) => setDate(e.target.value)} 
+                        required
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={6}>
+                    <Form.Group controlId="formEventTime">
+                      <Form.Label>Hora</Form.Label>
+                      <Form.Control 
+                        type="time" 
+                        value={time} 
+                        onChange={(e) => setTime(e.target.value)} 
+                        required
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
 
-            <Form.Group className="mb-3" controlId="formEventTime">
-              <Form.Label>Hora</Form.Label>
-              <Form.Control 
-                type="time" 
-                value={time} 
-                onChange={(e) => setTime(e.target.value)} 
-                required
-              />
-            </Form.Group>
+                <Form.Group className="mb-4" controlId="formEventVenue">
+                  <Form.Label>Lugar</Form.Label>
+                  <Form.Select 
+                    value={venue} 
+                    onChange={(e) => setVenue(e.target.value)}
+                    required
+                  >
+                    <option value="">Selecciona un lugar</option>
+                    {venues.map((v, index) => (
+                      <option key={index} value={v.name}>{v.name}</option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formEventVenue">
-              <Form.Label>Lugar</Form.Label>
-              <Form.Select 
-                value={venue} 
-                onChange={(e) => setVenue(e.target.value)}
-                required
-              >
-                <option value="">Selecciona un lugar</option>
-                {venues.map((v, index) => (
-                  <option key={index} value={v.name}>{v.name}</option>
-                ))}
-              </Form.Select>
-            </Form.Group>
+                <Form.Group className="mb-4" controlId="formEventVisible">
+                  <Form.Check 
+                    type="checkbox"
+                    label="Visible para todos (si no se marca, solo lo verán usuarios autenticados)"
+                    checked={visible}
+                    onChange={(e) => setVisible(e.target.checked)}
+                    className="small opacity-75"
+                  />
+                </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formEventVisible">
-              <Form.Check 
-                type="checkbox"
-                label="Visible para todos (si no se marca, solo lo verán usuarios autenticados)"
-                checked={visible}
-                onChange={(e) => setVisible(e.target.checked)}
-              />
-            </Form.Group>
+                <Form.Group className="mb-4" controlId="formEventDescription">
+                  <Form.Label>Descripción</Form.Label>
+                  <Form.Control 
+                    as="textarea" 
+                    rows={4} 
+                    placeholder="Detalles del evento, artistas, precios..."
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                  />
+                </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formEventDescription">
-              <Form.Label>Descripción</Form.Label>
-              <Form.Control 
-                as="textarea" 
-                rows={3} 
-                placeholder="Introduce la descripción del evento"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
-            </Form.Group>
+                <Form.Group className="mb-5" controlId="formEventImage">
+                  <Form.Label>Póster del Evento (opcional)</Form.Label>
+                  <div className="d-flex align-items-center gap-3">
+                    <Form.Control 
+                      type="file" 
+                      accept="image/*" 
+                      onChange={handleFileChange} 
+                      ref={fileInputRef}
+                    />
+                    {uploadingImage && <Spinner animation="border" size="sm" />}
+                  </div>
+                  {imageUrl && (
+                    <div className="mt-2 small text-success">
+                      ✓ Imagen lista: <a href={imageUrl} target="_blank" rel="noopener noreferrer" className="text-decoration-none">Ver póster</a>
+                    </div>
+                  )}
+                </Form.Group>
 
-            {/* New Image Upload Field */}
-            <Form.Group className="mb-3" controlId="formEventImage">
-              <Form.Label>Póster del Evento (opcional)</Form.Label>
-              <Form.Control 
-                type="file" 
-                accept="image/*" 
-                onChange={handleFileChange} 
-                ref={fileInputRef}
-              />
-              {uploadingImage && <Spinner animation="border" size="sm" className="ms-2" />}
-              {imageUrl && <p className="text-success mt-2">Imagen subida: <a href={imageUrl} target="_blank" rel="noopener noreferrer">{imageUrl}</a></p>}
-            </Form.Group>
-
-            <Button variant="primary" type="submit" disabled={uploadingImage}>
-              {uploadingImage ? 'Subiendo imagen...' : 'Enviar'}
-            </Button>
-          </Form>
+                <div className="d-grid">
+                  <Button 
+                    variant="primary" 
+                    type="submit" 
+                    size="lg"
+                    disabled={uploadingImage}
+                  >
+                    {uploadingImage ? 'Subiendo imagen...' : 'Crear Evento'}
+                  </Button>
+                </div>
+              </Form>
+            </Card.Body>
+          </Card>
         </Col>
       </Row>
     </Container>
