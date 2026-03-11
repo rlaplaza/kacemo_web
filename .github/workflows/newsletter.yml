@@ -48,36 +48,36 @@ jobs:
             const body = issue.body;
             const title = issue.title;
 
-            const dateMatch = body.match(/\*\*Date:\*\* (.*)/);
-            const timeMatch = body.match(/\*\*Time:\*\* (.*)/);
-            const venueMatch = body.match(/\*\*Venue:\*\* (.*)/);
-            const descriptionMatch = body.match(/\*\*Description:\*\*\n(.*)/s);
+            const dateMatch = body.match(/^(\*\*Fecha:\*\*|Fecha:) (.*)/m);
+            const timeMatch = body.match(/^(\*\*Hora:\*\*|Hora:) (.*)/m);
+            const venueMatch = body.match(/^(\*\*Lugar:\*\*|Lugar:) (.*)/m);
+            const descriptionMatch = body.match(/\*\*Descripción:\*\*\n(.*)/s);
 
             if (dateMatch && timeMatch) {
-              const eventDateStr = dateMatch[1].trim();
-              const eventTimeStr = timeMatch[1].trim();
+              const eventDateStr = dateMatch[2].trim();
+              const eventTimeStr = timeMatch[2].trim();
               const eventDateTime = moment(`${eventDateStr} ${eventTimeStr}`, 'YYYY-MM-DD HH:mm');
 
               // Filter events happening in the next 7 days
               if (eventDateTime.isBetween(today, nextWeek, null, '[]')) { // [] means inclusive
                 hasUpcomingEvents = true;
                 newsletterContent += `*   **${title}**\n`;
-                newsletterContent += `    *   **Date:** ${eventDateStr}\n`;
-                newsletterContent += `    *   **Time:** ${eventTimeStr}\n`;
+                newsletterContent += `    *   **Fecha:** ${eventDateStr}\n`;
+                newsletterContent += `    *   **Hora:** ${eventTimeStr}\n`;
                 if (venueMatch) {
-                  newsletterContent += `    *   **Venue:** ${venueMatch[1].trim()}\n`;
+                  newsletterContent += `    *   **Lugar:** ${venueMatch[2].trim()}\n`;
                 }
                 if (descriptionMatch) {
                   const description = descriptionMatch[1].trim().split('\n')[0]; // Take first line of description
-                  newsletterContent += `    *   **Description:** ${description}...\n`;
+                  newsletterContent += `    *   **Descripción:** ${description}...\n`;
                 }
-                newsletterContent += `    *   [View Event on GitHub](${issue.html_url})\n\n`;
+                newsletterContent += `    *   [Ver Evento en GitHub](${issue.html_url})\n\n`;
               }
             }
           }
 
           if (!hasUpcomingEvents) {
-            newsletterContent += "No events scheduled for the upcoming week. Stay tuned!\n";
+            newsletterContent += "¡No hay eventos programados para la próxima semana! ¡Estad atentos!\n";
           }
           
           core.setOutput('content', newsletterContent);
@@ -87,7 +87,9 @@ jobs:
     - name: Send Newsletter
       run: |
         echo "Attempting to send newsletter..."
-        echo "${{ steps.generate_content.outputs.content }}"
+        cat << 'EOF'
+        ${{ steps.generate_content.outputs.content }}
+        EOF
         
         # This section requires an external email service like SendGrid, Mailgun, etc.
         # You will need to install a client for your chosen service (e.g., npm install @sendgrid/mail)
@@ -102,8 +104,8 @@ jobs:
         #   to: 'recipient@example.com', // Change to your recipient
         #   from: 'sender@example.com', // Change to your verified sender
         #   subject: 'Seville Events Upcoming Week',
-        #   text: `${{ steps.generate_content.outputs.content }}`, 
-        #   html: `<p>${{ steps.generate_content.outputs.content.replace(/\n/g, '<br>') }}</p>`,
+        #   text: 'REPLACE_WITH_CONTENT_TEXT', 
+        #   html: '<p>REPLACE_WITH_CONTENT_HTML</p>',
         # };
         #
         # sgMail.send(msg)
